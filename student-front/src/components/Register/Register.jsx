@@ -27,6 +27,10 @@ export const Register = () => {
 
   const postEntry = async (e) => {
     e.preventDefault();
+    if (Password !== Confirmpassword) {
+      window.alert("Passwords do not match");
+      return;
+    }
     try {
       const post = {
         firstname: Firstname,

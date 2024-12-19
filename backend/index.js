@@ -1,9 +1,11 @@
+// Importing required modules
 const express = require("express");
 const cors = require("cors");
 const env = require("dotenv");
+const bcrypt = require("bcrypt");
 const app = express();
 const path = require("path");
-var router = express.Router();
+const router = express.Router();
 const session = require("express-session");
 const StudentRoute = require("./routes/student/student.route");
 const AdminRoute = require("./routes/admin/admin.route");
@@ -17,100 +19,178 @@ const verifyStudent = require("./middleware/verifyStudent");
 const verifyAdmin = require("./middleware/verifyAdmin");
 const verifyLoggedIn = require("./middleware/verifyLoggedIn");
 
-// enviorment varibale configuration before using them in the code
-env.config();
+// Environment variables configuration (from .env file)
+env.config(); // This loads environment variables (like MONGO_URI) from a .env file
 
-// server health check route
+// Middlewares
+app.use(express.json()); // Parses incoming JSON requests
+app.use(express.urlencoded({ extended: true })); // Parses URL-encoded data (like form submissions)
+app.use(cors({ origin: "http://localhost:3000", credentials: true })); // Enables CORS for a specific origin (frontend app)
 
-// middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
-
-// express session with mongodb as storage
+// Express session with MongoDB as storage
 app.use(
   session({
-    secret: process.env.SESSION_SECRETS,
-    resave: false,
-    saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+    secret: process.env.SESSION_SECRETS, // Secret used to sign the session ID cookie
+    resave: false, // Don't resave session if it wasn't modified
+    saveUninitialized: true, // Save session even if it's not modified
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }), // Store session in MongoDB (using connect-mongo)
     cookie: {
-      httpOnly: true,
-      secure: false,
-      maxAge: 1000 * 60 * 60 * 10, // keeping cookies for 10 hours alive
+      httpOnly: true, // Prevents JavaScript from accessing session cookie
+      secure: false, // Set to true in production when using https
+      maxAge: 1000 * 60 * 60 * 10, // Session cookie expiration time (10 hours)
     },
   })
 );
 
+// MongoDB connection and insert admin user
+const insertAdminUser = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI); // Connect to MongoDB
+    console.log("DB Connected!");
+
+    const db = mongoose.connection; // Access the connection object
+    const Admin = require("./models/admin/admin.model");  // Import the Admin model
+
+    // Admin data
+    const email = process.env.ADMIN_EMAIL; // Admin email
+    const password = process.env.ADMIN_PASSWORD; // Admin password (plain text, will be hashed)
+
+    // Check if an admin with this email already exists
+    const existingAdmin = await Admin.findOne({ email });
+
+    if (existingAdmin) {
+      console.log(`Admin with email ${email} already exists.`); // Log message if admin already exists
+      return; // If admin exists, exit the function without inserting
+    }
+
+    // Hash the password before saving to the database
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new Admin object with the hashed password
+    const newAdmin = new Admin({
+      email: email,
+      password: hashedPassword,
+      role: 'admin', // Set role as admin
+    });
+
+    await newAdmin.save(); // Save the new admin to the database
+    console.log("Admin user inserted successfully!");
+  } catch (error) {
+    console.error("Error connecting to MongoDB or inserting admin:", error); // Log any errors that occur
+  }
+};
+
+// Run the insertAdminUser function if needed to ensure an admin exists
+insertAdminUser();
+
+// Static files (for serving static content like images, documents, etc.)
 app.use(express.static(path.join(__dirname, "sheets"), { index: false }));
 
+// Server health check route (used to check if the server is running)
 app.get("/api", (req, res) => {
-  res.json({ msg: "server is up and running!" });
+  res.json({ msg: "server is up and running!" }); // Respond with a simple JSON message
 });
 
-app.use("/api/auth", AuthRoute);
-// app.use("/api/student", verifyStudent, StudentRoute);
-app.use("/api/student",StudentRoute);
-app.use("/api/admin" ,AdminRoute);
-app.use("/api/company",CompanyRoute);
-app.use("/api/reports", verifyAdmin,ReportsRoute);
+// Define API routes for different resources
+app.use("/api/auth", AuthRoute); // Authentication-related routes (login, signup, etc.)
+app.use("/api/student", StudentRoute); // Routes for student-related actions
+app.use("/api/admin", AdminRoute); // Routes for admin-related actions
+app.use("/api/company", CompanyRoute); // Routes for company-related actions
+app.use("/api/reports", verifyAdmin, ReportsRoute); // Routes for reports, protected by admin verification
 
+// Session check route (to check if a user is logged in)
 app.get("/get-session", (req, res) => {
-  res.json(req.session.isAuth);
+  res.json(req.session.isAuth); // Respond with session authentication status
 });
 
+// Production-specific routing
 if (process.env.NODE_ENV === "production") {
-  // serving admin builds
+  // Serving admin frontend build (for production deployment)
   app.use(
     express.static(path.join(__dirname, "..", "admin-front", "build"), {
-      index: false,
+      index: false, // Do not serve an index file for this path
     })
   );
-  // serving students builds
+
+  // Serving student frontend build (for production deployment)
   app.use(
     express.static(path.join(__dirname, "..", "student-front", "build"), {
       index: false,
     })
   );
 
-  // only student login is visible without login
+  // Route to serve student login page without login (only publicly available page for students)
   app.get("/Login", (req, res) => {
     return res.sendFile(
       path.join(__dirname, "..", "student-front", "build", "index.html")
     );
   });
 
-  // only admin login is visible without login
+
+
+// Registration route
+app.post("/api/Register", async (req, res) => {
+  try {
+    const { firstname, lastname, email, password, confirmpassword } = req.body;
+
+    // Check if passwords match
+    if (password !== confirmpassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
+
+    // Check if the user already exists by checking the email
+    const existingUser = await mongoose.connection.db.collection('users').findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
+
+    // Hash the password before saving
+    const salt = await bcrypt.genSalt(10); // Generate salt for bcrypt
+    const hashedPassword = await bcrypt.hash(password, salt); // Hash the password
+
+    // Save the user data directly in the 'users' collection (no User model)
+    await mongoose.connection.db.collection('users').insertOne({
+      firstname,
+      lastname,
+      email,
+      password: hashedPassword, // Store only the hashed password
+    });
+
+    // Send success response
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (error) {
+    console.error("Error during registration:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+  
+
+
+  // Route to serve admin login page without login (only publicly available page for admins)
   app.get("/admin/login", (req, res) => {
     return res.sendFile(
       path.join(__dirname, "..", "admin-front", "build", "index.html")
     );
   });
 
-  // admin protected routes
+  // Admin protected routes (only accessible after admin login)
   app.get("/admin/*", verifyAdmin, (req, res) => {
     return res.sendFile(
       path.join(__dirname, "..", "admin-front", "build", "index.html")
     );
   });
 
-  // student protected routes
+  // Student protected routes (only accessible after student login)
   app.get("/*", verifyStudent, (req, res) => {
     return res.sendFile(
       path.join(__dirname, "..", "student-front", "build", "index.html")
     );
   });
 }
-// db connections
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("DB Connected!");
-  })
-  .catch((error) => console.log("error >> ", error));
 
-// starting server
-const port = process.env.PORT || 5000;
+// Starting the server (listening on a specified port)
+const port = process.env.PORT || 5000; // Use the port from the environment or fallback to 5000
 app.listen(port, () => {
-  console.log("listening on port  : " + port);
+  console.log("Server is listening on port:", port); // Log when the server is up and running
 });

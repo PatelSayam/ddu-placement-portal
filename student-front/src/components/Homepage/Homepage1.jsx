@@ -12,6 +12,7 @@ import convertToDate from "../../utils/convertToDate";
 import { toast } from "react-toastify";
 
 export const Homepage1 = () => {
+
   const getValues = async () => {
     return axios
       .get(`/api/company/of/${getStuId()}`, {
