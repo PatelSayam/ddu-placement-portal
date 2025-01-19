@@ -37,9 +37,11 @@ export const ForgotPassword = () => {
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
         <div className="bg-gray-800 flex flex-col justify-center">
+          
           <h1 className="text-white text-3xl text-center font-bold mb-10">
-            DDU Plaement portal for students
+            DDU Placement portal for students
           </h1>
+
           <form
             className="max-w-[400px] w-full mx-auto bg-gray-900 p-8 px-8 rounded-lg"
             method="post"
@@ -65,14 +67,17 @@ export const ForgotPassword = () => {
                 <p className="underline"> Login here</p>
               </div>
             </Link>
+
             {/* <Link to={"/Homepage"}> */}
+
             <button
-              className="rounded-lg w-full my-5 py-2 bg-teal-500 shadow-lg shadow-teal-300/30 hover: shadow-teal-500/40 text-white font-semibold"
+              className="rounded-lg w-full my-5 py-2 bg-indigo-500 shadow-lg shadow-indigo-300/30 hover: shadow-indigo-500/40 text-white font-semibold"
               onClick={handleForgotPassword}
               disabled={isLoading}
             >
               {isLoading ? <BeatLoader color="white" /> : "Search account"}
             </button>
+
           </form>
         </div>
 
@@ -83,6 +88,7 @@ export const ForgotPassword = () => {
             alt=""
           ></img>
         </div>
+        
       </div>
     </>
   );

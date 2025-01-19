@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Navbar } from "../Navbar/Navbar";
 import { useEffect, useState } from "react";
 import crypto from "crypto-js";
@@ -110,7 +110,7 @@ export const Homepage1 = () => {
             <tbody>
               {item.roles.map((item1) => {
                 return (
-                  <React.Fragment>
+                  <Fragment>
                     <tr className=" border-gray-400 border-b">
                       <td className="px-5 py-3 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-900 tracking-normal leading-4">
                         {item1.name}
@@ -136,7 +136,7 @@ export const Homepage1 = () => {
                         {item1.mode}
                       </td>
                     </tr>
-                  </React.Fragment>
+                  </Fragment>
                 );
               })}
             </tbody>

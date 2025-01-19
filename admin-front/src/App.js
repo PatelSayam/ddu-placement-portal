@@ -10,12 +10,15 @@ function App() {
   const [cookies, setCookie, removeCookie] = useCookies("user");
   const [count, setCount] = useState(0);
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!cookies.user) navigate("/login");
   }, []);
+
   const increase = () => {
     setCount(count + 1);
   };
+
   const handleLogout = async () => {
     removeCookie("user");
     axios
@@ -23,7 +26,9 @@ function App() {
       .then((response) => {
         return response.data;
       })
-      .then((data) => {})
+      .then((data) => {
+        //Placeholdr for additional actions with the response data
+      })
       .catch((error) => {
         console.log(error);
       });
@@ -33,6 +38,7 @@ function App() {
   return (
     <div className="bg-backg grid grid-cols-12 ">
       <Navbar />
+
       <div className="col-start-3 col-end-13 text-white">
         <button onClick={handleLogout}>Logout</button>
         <button onClick={increase}>+</button>
@@ -47,6 +53,7 @@ function App() {
           <div className="bg-section w-64 h-52 m-4"></div>
         ))}
       </div>
+      
       <Footer />
     </div>
   );

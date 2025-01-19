@@ -23,11 +23,11 @@ function Fetch_id() {
 
 function App() {
   return (
-    <div className="App">
+    <div className="App">      
       <BrowserRouter>
         <Routes>
-          {/* <Route exact path="/" element={<Login />} /> */}
-          <Route exact path="/" element={<Homepage1 />} />
+          <Route exact path="/" element={<Login />} />
+          <Route exact path="/Homepage1" element={<Homepage1 />} />
           <Route exact path="/Login" element={<Login />} />
           <Route exact path="/Register" element={<Register />} />
           <Route exact path="/Profile" element={<Profile />} />
