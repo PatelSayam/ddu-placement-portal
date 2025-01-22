@@ -14,9 +14,7 @@ const FilterInputWithValue = ({
         type={type || "text"}
         name={name}
         value={value ? value : ""}
-        onChange={(e) => {
-          onChangeFun(e);
-        }}
+        onChange={(e) => {  onChangeFun(e);  }}
         className={`outline-none px-4 py-1 rounded-md bg-alternate`}
       />
     </div>

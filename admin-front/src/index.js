@@ -114,3 +114,8 @@ root.render(
     </QueryClientProvider>
   </React.StrictMode>
 );
+
+/*
+<QueryClientProvider client={queryClient}> 
+  -> provides the instance to the rest of the application, enabling the use of React Query for data fetching and caching.
+*/

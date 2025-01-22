@@ -9,6 +9,7 @@ import axios from "axios";
 
 export const Navbar = () => {
   const navigate = useNavigate();
+  
   const handleLogOut = async () => {
     removeStuId();
     const { data } = await axios.post("/api/auth/logout");
@@ -16,17 +17,19 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="  shadow sticky w-100 px-8 md:px-auto  text-blue-600">
+    <nav className="shadow sticky w-100 px-8 md:px-auto  text-blue-600">
       <div className="md:h-16 h-28 mx-auto md:px-4 container flex items-center justify-between flex-wrap md:flex-nowrap">
-        <div className=" flex ">
+        
+        <div className="flex">
           <div>
             <span className="self-center text-xl font-semibold whitespace-nowrap text-blue-600">
               Dharmsinh Desai University
             </span>
           </div>
         </div>
+
         <div className=" order-3 w-full md:w-auto md:order-2 ">
-          <ul className="flex font-semibold justify-between">
+          <ul className="flex font-semibold justify-between">            
             <Link to="/">
               <li className="md:px-4 md:py-2   hover:text-blue-600">
                 <div className="flex">
@@ -36,6 +39,7 @@ export const Navbar = () => {
                 </div>
               </li>
             </Link>
+
             <Link to="/AlreadyApplied">
               <li className="md:px-4 md:py-2   hover:text-blue-600">
                 <div className="flex">
@@ -45,6 +49,7 @@ export const Navbar = () => {
                 </div>
               </li>
             </Link>
+
             <Link to="/Profile">
               <li className="md:px-4 md:py-2   hover:text-blue-600">
                 <div className="flex">
@@ -56,6 +61,7 @@ export const Navbar = () => {
             </Link>
           </ul>
         </div>
+
         <div className="order-2 md:order-3">
           <button
             type="button"
@@ -67,6 +73,7 @@ export const Navbar = () => {
             <span className="mx-1">Logout</span>
           </button>
         </div>
+
       </div>
     </nav>
   );
