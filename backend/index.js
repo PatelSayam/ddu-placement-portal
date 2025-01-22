@@ -18,6 +18,10 @@ const MongoStore = require("connect-mongo");
 const verifyStudent = require("./middleware/verifyStudent");
 const verifyAdmin = require("./middleware/verifyAdmin");
 const verifyLoggedIn = require("./middleware/verifyLoggedIn");
+const multer = require('multer');
+const pdfParse = require('pdf-parse');
+const axios = require('axios');
+
 
 // Environment variables configuration (from .env file)
 env.config(); // This loads environment variables (like MONGO_URI) from a .env file
@@ -188,6 +192,57 @@ app.post("/api/Register", async (req, res) => {
     );
   });
 }
+
+
+// Set up Multer for file uploads
+const storage = multer.memoryStorage(); // Using memoryStorage to avoid saving to disk
+const upload = multer({ storage: storage, limits: { fileSize: 10 * 1024 * 1024 } }); // 10MB limit
+
+app.post('/uploadpdf', upload.single('pdf'), async (req, res) => {
+  if (!req.file) {
+    console.log('No file uploaded');
+    return res.status(400).send('No file uploaded.');
+  }
+
+  try {
+    console.log('File uploaded:', req.file.originalname); // Log file info
+
+    const pdfBuffer = req.file.buffer;
+    console.log('PDF buffer received, size:', pdfBuffer.length);  // Log buffer size
+
+    const pdfText = await pdfParse(pdfBuffer).catch((err) => {
+      console.error('Error parsing PDF:', err);
+      throw new Error('PDF parsing failed');
+    });
+    console.log('PDF text parsed:', pdfText.text.slice(0, 100));  // Log a snippet of the text
+
+    const importantKeywords = extractKeywords(pdfText.text);
+    console.log('Keywords extracted:', importantKeywords);
+
+    res.json({
+      status: 'success',
+      data: importantKeywords,
+    });
+  } catch (error) {
+    console.error('Error during file processing:', error); // Log error details
+    res.status(500).send('Error processing the PDF.');
+  }
+});
+
+// Extract keywords using compromise NLP
+function extractKeywords(text) {
+  const nlpDoc = compromise(text);
+  const roles = nlpDoc.match('#JobTitle').out('array');
+  const locations = nlpDoc.match('#City').out('array');
+  const salary = nlpDoc.match('#Money').out('array');
+
+  return {
+    roles,
+    locations,
+    salary,
+  };
+}
+
 
 // Starting the server (listening on a specified port)
 const port = process.env.PORT || 5000; // Use the port from the environment or fallback to 5000

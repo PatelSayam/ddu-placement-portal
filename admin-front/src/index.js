@@ -21,6 +21,7 @@ import CreateCompany1 from "./pages/CreateCompany1";
 import { ToastContainer } from "react-toastify";
 import ManagePlaced from "./pages/ManagePlaced";
 import RoleView from "./pages/RoleView";
+import UploadPDF from "./pages/UploadPDF";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const router = createBrowserRouter([
@@ -83,6 +84,10 @@ const router = createBrowserRouter([
   {
     path: "/admin/reports",
     element: <Reports />,
+  },
+  {
+    path: "/admin/uploadpdf",
+    element: <UploadPDF/>,
   },
   {
     path: "/*",
