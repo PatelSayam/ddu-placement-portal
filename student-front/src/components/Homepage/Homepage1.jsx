@@ -36,6 +36,7 @@ export const Homepage1 = () => {
   }
 
   const renderItem1 = (item) => {
+    console.log(item);
     return (
       <div className=" p-4 mx-10 my-8 text-black bg-[#d8ecff] rounded-md  border-blue-500 ">
         <div>
@@ -165,7 +166,7 @@ export const Homepage1 = () => {
           </div>
         ) : (
           _data.map(renderItem1)
-        )}
+        )} 
       </div>
     </>
   );

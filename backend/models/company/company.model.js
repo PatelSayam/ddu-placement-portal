@@ -20,12 +20,12 @@ const CompanySchema = mongoose.Schema({
         bonds: { type: Number, required: true, default: 0 },
         deadline: { type: String, required: true },
         interviewDate: { type: String, required: true },
-        interviewMode: { type: String, enum: ["online", "offline"] },
+        interviewMode: { type: String, enum: ["online", "offline"]},
 
         requirements: {
           type: mongoose.Schema({
             cpi: { type: Number, defualt: 0 },
-            twelfthPerc: { type: Number, default: 0 },
+            twelthPerc: { type: Number, default: 0 },
             tenthPerc: { type: Number, default: 0 },
             diplomaPerc: { type: Number, default: 0 },
             competitiveCoding: {

@@ -49,9 +49,9 @@ const StudentSchema = mongoose.Schema({
       sem8: { type: Number, min: 0, max: 10, default: 0 },
       cpi: { type: Number, min: 0, max: 10, default: 0 },
 
-      twelfthPerc: { type: Number, default: 0 },
-      twelfthBoardType: { type: String, default: "" },
-      twelfthBoardPassingYear: { type: Number, default: 0 },
+      twelthPerc: { type: Number, default: 0 },
+      twelthBoardType: { type: String, default: "" },
+      twelthBoardPassingYear: { type: Number, default: 0 },
 
       tenthPerc: { type: Number, default: 0 },
       tenthBoardType: { type: String, default: "" },

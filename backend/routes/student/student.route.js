@@ -7,31 +7,39 @@ const {
   NO_UID,
   DUPLICATE_STUDENT,
 } = require("../../constants/constantsMessages");
+
 const verifyAdmin = require("../../middleware/verifyAdmin");
+
 const { sendVerificationEmail } = require("../../utils/sendVerificationEmail");
+
 const {
   registerNewStudentWithEmail,
 } = require("../../controllers/student/registerNewStudentWithEmail");
+
 const {
   updateStudentDetails,
 } = require("../../controllers/student/updateStudentDetails");
+
 const { getStudent } = require("../../controllers/student/getStudents");
 const {
   getStudentApplications,
 } = require("../../controllers/student/getStudentApplications");
+
 const { updatePassword } = require("../../controllers/student/updatePassword");
 const {
   deleteStudentById,
 } = require("../../controllers/student/deleteStudentById");
+
 const { forgetPassword } = require("../../controllers/student/forgetPassword");
 const {
   uploadProfilePic,
 } = require("../../controllers/student/uploadProfilePic");
+
 const { uploadResume } = require("../../controllers/student/uploadResume");
 const verifyLoggedIn = require("../../middleware/verifyLoggedIn");
 const verifyStudent = require("../../middleware/verifyStudent");
 
-router.get("/", verifyLoggedIn,getStudent);
+router.get("/", verifyLoggedIn, getStudent);
 router.delete("/:stuId", verifyAdmin,deleteStudentById);
 
 // register new student with email

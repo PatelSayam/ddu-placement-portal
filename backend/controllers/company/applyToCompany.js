@@ -5,6 +5,7 @@ const {
   INVALID_REQUEST_DATA,
   INVALID_REQUEST_DATA_CODE,
 } = require("../../constants/constantsMessages");
+
 const Company = require("../../models/company/company.model");
 const Student = require("../../models/student/student.model");
 const { isElligible } = require("../../utils/company.utils");

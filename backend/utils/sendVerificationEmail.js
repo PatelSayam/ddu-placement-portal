@@ -28,6 +28,8 @@ const sendVerificationEmail = async (email, password) => {
     transporter.sendMail(mailOptions, (err, response) => {
       if (err) {
         console.log("in sending mail >> ", err);
+      } else {
+        console.log("Email sent successfully >>", response);
       }
     });
   } catch (err) {

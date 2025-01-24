@@ -3,31 +3,33 @@ const express = require("express");
 const cors = require("cors");
 const env = require("dotenv");
 const bcrypt = require("bcrypt");
-const app = express();
 const path = require("path");
 const router = express.Router();
 const session = require("express-session");
+const app = express();
+
+//Importing routes
 const StudentRoute = require("./routes/student/student.route");
 const AdminRoute = require("./routes/admin/admin.route");
 const AuthRoute = require("./routes/auth/auth.route");
 const CompanyRoute = require("./routes/company/company.route");
 const ReportsRoute = require("./routes/reports/reports.route");
 // const TrashRoute = require("./routes/trash/trash.route");
+
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 const verifyStudent = require("./middleware/verifyStudent");
 const verifyAdmin = require("./middleware/verifyAdmin");
-const verifyLoggedIn = require("./middleware/verifyLoggedIn");
+// const verifyLoggedIn = require("./middleware/verifyLoggedIn");
 
-// Environment variables configuration (from .env file)
-env.config(); // This loads environment variables (like MONGO_URI) from a .env file
+env.config(); // loads environment variable form .env file
 
 // Middlewares
 app.use(express.json()); // Parses incoming JSON requests
 app.use(express.urlencoded({ extended: true })); // Parses URL-encoded data (like form submissions)
-app.use(cors({ origin: "http://localhost:3000", credentials: true })); // Enables CORS for a specific origin (frontend app)
+app.use(cors({ origin: "http://localhost:3000", credentials: true })); // Enables CORS for a specific origin (frontend app) and second (true) oprtions allows cookies to be sent and received across origins
 
-// Express session with MongoDB as storage
+// Express session middleawre with MongoDB as storage
 app.use(
   session({
     secret: process.env.SESSION_SECRETS, // Secret used to sign the session ID cookie
@@ -84,14 +86,13 @@ const insertAdminUser = async () => {
 insertAdminUser();
 
 // Static files (for serving static content like images, documents, etc.)
-app.use(express.static(path.join(__dirname, "sheets"), { index: false }));
+// app.use(express.static(path.join(__dirname, "sheets"), { index: false }));
 
 // Server health check route (used to check if the server is running)
 app.get("/api", (req, res) => {
   res.json({ msg: "server is up and running!" }); // Respond with a simple JSON message
 });
 
-// Define API routes for different resources
 app.use("/api/auth", AuthRoute); // Authentication-related routes (login, signup, etc.)
 app.use("/api/student", StudentRoute); // Routes for student-related actions
 app.use("/api/admin", AdminRoute); // Routes for admin-related actions
@@ -101,6 +102,7 @@ app.use("/api/reports", verifyAdmin, ReportsRoute); // Routes for reports, prote
 // Session check route (to check if a user is logged in)
 app.get("/get-session", (req, res) => {
   res.json(req.session.isAuth); // Respond with session authentication status
+  
 });
 
 // Production-specific routing
@@ -125,8 +127,6 @@ if (process.env.NODE_ENV === "production") {
       path.join(__dirname, "..", "student-front", "build", "index.html")
     );
   });
-
-
 
 // Registration route
 app.post("/api/Register", async (req, res) => {
@@ -164,33 +164,29 @@ app.post("/api/Register", async (req, res) => {
   }
 });
 
-  
+// Route to serve admin login page without login (only publicly available page for admins)
+app.get("/admin/login", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "admin-front", "build", "index.html")
+  );
+});
 
+// Admin protected routes (only accessible after admin login)
+app.get("/admin/*", verifyAdmin, (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "admin-front", "build", "index.html")
+  );
+});
 
-  // Route to serve admin login page without login (only publicly available page for admins)
-  app.get("/admin/login", (req, res) => {
-    return res.sendFile(
-      path.join(__dirname, "..", "admin-front", "build", "index.html")
-    );
-  });
-
-  // Admin protected routes (only accessible after admin login)
-  app.get("/admin/*", verifyAdmin, (req, res) => {
-    return res.sendFile(
-      path.join(__dirname, "..", "admin-front", "build", "index.html")
-    );
-  });
-
-  // Student protected routes (only accessible after student login)
-  app.get("/*", verifyStudent, (req, res) => {
-    return res.sendFile(
-      path.join(__dirname, "..", "student-front", "build", "index.html")
-    );
+// Student protected routes (only accessible after student login)
+app.get("/*", verifyStudent, (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "student-front", "build", "index.html")
+  );
   });
 }
 
-// Starting the server (listening on a specified port)
-const port = process.env.PORT || 5000; // Use the port from the environment or fallback to 5000
+const port = process.env.PORT || 5000; 
 app.listen(port, () => {
-  console.log("Server is listening on port:", port); // Log when the server is up and running
+  console.log("Server is listening on port:", port);
 });
