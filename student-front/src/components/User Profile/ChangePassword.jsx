@@ -7,6 +7,7 @@ import { Navbar } from "../Navbar/Navbar";
 import getStuId from "../../utils/getStuId";
 import { ToastContainer, toast } from "react-toastify";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { ErrorMessage } from "@hookform/error-message";
 
 const ChangePassword = () => {
@@ -16,6 +17,7 @@ const ChangePassword = () => {
   });
 
   const [isUpdating, setIsUpdating] = useState(false);
+  const navigate = useNavigate();
 
   const updatePassword = async (e) => {
     e.preventDefault();
@@ -31,6 +33,7 @@ const ChangePassword = () => {
 
       if (data?.success === true) {
         toast.success("Password updated succesfully");
+        navigate("/Homepage1");
       } else if (data?.success === false) {
         toast.error("Invalid data");
       }
@@ -52,14 +55,17 @@ const ChangePassword = () => {
     watch,
   } = useForm({});
   console.log(errors);
+
   return (
     <div className="min-h-screen text-black">
       {/* Navbar */}
-      <Navbar focusOn="companies" />
+      {/* <Navbar focusOn="companies" /> */}
+      <Navbar />
+      
       {/* Wrapper div */}
       <div className="px-2 py-5 flex flex-col gap-8 md:px-8 lg:px-12">
         <div className="bg-[#d8ecff] mx-auto px-4 py-4 lg:w-2/3">
-          <h1 className={`text-3xl font-bold `}>{"Change Passwrod"}</h1>
+          <h1 className={`text-3xl font-bold `}>{"Change Password"}</h1>
 
           <div className="flex flx-row justify-end mt-2 ">
             <div className="flex flex-row gap-4"></div>

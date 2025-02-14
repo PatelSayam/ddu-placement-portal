@@ -14,12 +14,16 @@ import { toast } from "react-toastify";
 export const Homepage1 = () => {
 
   const getValues = async () => {
+    // console.log(getStuId); 
     return axios
-      .get(`/api/company/of/${getStuId()}`, {
+      .get(`/api/company/of/${getStuId}`, {
         withCredentials: true,
       })
       .then(({ data }) => {
         return data.data;
+      })
+      .catch((err) => {
+        return err;
       });
   };
 

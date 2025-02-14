@@ -7,7 +7,7 @@ const CompanySchema = mongoose.Schema({
   email: { type: String, required: true },
   forBatch: { type: Number, required: true },
   description: { type: String },
-  isActive: { type: Boolean, default: false, required: true },
+  isActive: { type: Boolean, default: true, required: true },
   roles: {
     type: [
       mongoose.Schema({

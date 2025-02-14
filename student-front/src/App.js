@@ -10,6 +10,7 @@ import { BrowserRouter, Route, Routes, useParams } from "react-router-dom";
 import { Homepage1 } from "./components/Homepage/Homepage1";
 import crypto from "crypto-js";
 import { Already_applied } from "./components/Already applied/Already_applied";
+import  Available_company  from "./components/Company/Available_company";
 import ChangePassword from "./components/User Profile/ChangePassword";
 import PageNotFound from "./components/Error/PageNotFound";
 import { ForgotPassword } from "./components/Form/ForgotPassword";
@@ -18,6 +19,7 @@ function Fetch_id() {
   var { id } = useParams();
   const encodedWord = crypto.enc.Base64.parse(id); // encodedWord via Base64.parse()
   const decoded = crypto.enc.Utf8.stringify(encodedWord);
+  console.log("decoded data is", decoded)  
   return <Company_page fetched_url={{ id1: decoded }} />;
 }
 
@@ -32,6 +34,7 @@ function App() {
           <Route exact path="/Register" element={<Register />} />
           <Route exact path="/Profile" element={<Profile />} />
           <Route exact path="/Company/:id" element={<Fetch_id />} />
+          <Route exact path="/Available_company" element={<Available_company />} />
           <Route exact path="/AlreadyApplied" element={<Already_applied />} />
           <Route exact path="/changepassword" element={<ChangePassword />} />
           <Route exact path="/forgot-password" element={<ForgotPassword />} />

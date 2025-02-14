@@ -30,12 +30,12 @@ export const Navbar = () => {
 
         <div className=" order-3 w-full md:w-auto md:order-2 ">
           <ul className="flex font-semibold justify-between">            
-            <Link to="/">
+            <Link to="/Available_company">
               <li className="md:px-4 md:py-2   hover:text-blue-600">
                 <div className="flex">
                   {/* <div className='h-6 mr-3 sm:h-9'>{HomeIcon}</div> */}
                   <HomeIcon className="mx-1" />
-                  <p className="mx-1">Home</p>
+                  <p className="mx-1">Available Companies</p>
                 </div>
               </li>
             </Link>

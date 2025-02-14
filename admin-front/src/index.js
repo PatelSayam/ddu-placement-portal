@@ -110,6 +110,18 @@ root.render(
   </React.StrictMode>
 );
 
+// const queryClient = new QueryClient();
+
+// const root = ReactDom.createRoot(document.createElementById("root"));
+// root.render(
+//   <React.StrictMode>
+//     <QueryClientProvider client={queryClient}>
+//       <App />
+//     </QueryClientProvider>
+//   </React.StrictMode>
+// )
+
+
 /*
 <QueryClientProvider client={queryClient}> 
   -> provides the instance to the rest of the application, enabling the use of React Query for data fetching and caching.

@@ -9,34 +9,41 @@ const {
 } = require("../../constants/constantsMessages");
 
 const getStudentApplications = async (req, res) => {
-  const { stuId } = req.params;
-  if (!mongoose.isValidObjectId(stuId))
+  const { stuId } = req.params;    
+  
+  if (!mongoose.isValidObjectId(stuId)) {
     return res
       .status(INVALID_REQUEST_DATA_CODE)
       .json({ success: false, msg: INVALID_REQUEST_DATA });
+  }
 
-  const student = await Student.findOne({ _id: stuId });
+  const student = await Student.findOne({ _id: stuId });  
 
-  if (!student)
+  if (!student) {
     return res
       .status(INVALID_REQUEST_DATA_CODE)
       .json({ success: false, msg: INVALID_REQUEST_DATA });
+  }
+
   try {
     const companies = await Company.find({ forBatch: student.passingYear });
-
     // const comapny = await Company.findOne({ _id: id });
+
     let result = [];
 
-    companies.forEach((company) => {
+    companies.forEach((company) => {      
+      
       let roles = company?.roles?.filter((role) => {
         return role?.applications?.includes(stuId);
       });
       if (roles.length > 0) {
-        result.push({ ...company._doc, roles });
-      }
+        result.push({ ...company.toObject(), roles });
+      }    
+      // console.log("company is", company.toObject())
     });
 
     return res.json({ success: true, data: result });
+
   } catch (err) {
     return res
       .status(INTERNAL_SERVER_ERROR_CODE)

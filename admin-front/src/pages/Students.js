@@ -74,9 +74,10 @@ const Students = () => {
   );
 
   return (
-    <div className="bg-backg min-h-screen text-white">
+    <div className="bg-backg min-h-screen text-white">      
       {/* Navbar */}
       <Navbar focusOn="students" />
+
       {/* Wrapper */}
       <div className="px-2 py-5 flex flex-col gap-8 md:px-8 lg:px-12">
         {/* Add students */}
@@ -264,11 +265,11 @@ const Students = () => {
           </form>
         </div>
 
-        {/* For Batch */}
+        {/* For showing student batchwise */}
         <FilterInputWithValue
           name="passingYear"
           title="Passing Year"
-          value={filter.passingYear}
+          value={filter.passingYear}  
           onChangeFun={handleFilterChange}
           type="number"
         />

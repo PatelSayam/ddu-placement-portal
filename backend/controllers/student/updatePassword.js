@@ -22,8 +22,8 @@ const updatePassword = async (req, res) => {
     },
     { new: true }
   )
-    .then((updatedStudent) =>
-      res.json({ success: true, msg: "Password updated" })
+    .then((updatedStudent) =>      
+      res.json({ success: true, msg: "Password updated" })      
     )
     .catch((err) => {
       return res

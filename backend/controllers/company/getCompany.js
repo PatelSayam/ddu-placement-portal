@@ -29,7 +29,7 @@ const getCompany = async (req, res) => {
     expectedSkills,
     isActive,
     forBatch,
-  } = req.query;
+  } = req.query;  
 
   // to find the companies with elligibilities
   if (id && stuId) {
@@ -39,14 +39,15 @@ const getCompany = async (req, res) => {
         .json({ success: false, msg: INVALID_REQUEST_DATA });
     }
 
-    const comapny = await Company.findOne({ _id: id });
-    if (!comapny) {
+    const company = await Company.findOne({ _id: id });
+    console.log("company is", company);
+    if (!company) {
       return res
         .status(INVALID_REQUEST_DATA_CODE)
         .json({ success: false, msg: INVALID_REQUEST_DATA });
     }
 
-    let roles = comapny.roles.map((role) => {
+    let roles = company.roles.map((role) => {
       if (role?.elligibles.includes(stuId) && role) {
         return {
           ...role._doc,
@@ -58,7 +59,7 @@ const getCompany = async (req, res) => {
       }
     });
 
-    return res.json({ success: true, data: { ...comapny._doc, roles } });
+    return res.json({ success: true, data: { ...company._doc, roles } });
   }
 
   if (id) {
@@ -75,10 +76,31 @@ const getCompany = async (req, res) => {
         ...comapny._doc,
       },
     });
+  }  
+  
+  // find companies batchwise
+  try {
+    const foundCompanies = await Company.find({
+      $and: [
+        {
+          forBatch: forBatch ? { $eq: Number(forBatch) } : { $gte: 0 }          
+        },
+        {
+          isActive: true
+        } 
+      ]
+    })
+    if(foundCompanies.length === 0)
+      return res.json({ success: false, data: [] });
+
+    return res.json({ success: true, data: foundCompanies });
+  } catch(err) {
+    return res.json({ success: false, data: err.message});
   }
 
   // regex documentations -> https://www.mongodb.com/docs/manual/reference/operator/query/regex/
-  // i - case insensitivity
+  // i - case insensitivity  
+
   Company.find({
     $and: [
       {
@@ -103,7 +125,7 @@ const getCompany = async (req, res) => {
         isActive: isActive ? isActive : { $in: [true, false] },
       },
       {
-        forBatch: forBatch ? { $eq: forBatch } : { $gte: 0 },
+        forBatch: forBatch ? { $eq: Number(forBatch) } : { $gte: 0 },
       },
       {
         "roles.name": {
@@ -161,7 +183,7 @@ const getCompany = async (req, res) => {
       },
     ],
   })
-    .then((foundCompanies) => {
+    .then((foundCompanies) => {    
       return res.json({ success: true, data: foundCompanies });
     })
     .catch((error) => {
