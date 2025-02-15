@@ -80,8 +80,8 @@ router.post("/student/login", async (req, res) => {
 
     // Set up the session for the student
     req.session.email = foundStudent.collegeEmail; // Set the student's email in the session
-    req.session.isAdmin = false; // Mark the session as not admin
-    req.session.isStudent = true; // Mark the session as student
+    req.session.isAdmin = false; 
+    req.session.isStudent = true;     
     req.session.studentId = foundStudent._id; // Store the student's unique ID in the session
     req.session.adminId = null; // Ensure no admin session is active
 

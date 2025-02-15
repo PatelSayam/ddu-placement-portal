@@ -58,6 +58,29 @@ const getStudent = async (req, res) => {
     return;
   }
 
+  // get students according to passingyear
+  if(passingYear) {        
+    try {
+      const foundStudents = await Student.find({
+        $and: [
+          {
+            passingYear: passingYear ? { $eq: Number(passingYear) } : { $gte: 0 }
+          },
+          {
+            isVerified: true
+          } 
+        ]
+      });
+
+      if(foundStudents.length === 0)
+        return res.json({ success: false, data: [] });
+
+      return res.json({ success: true, data: foundStudents });
+    } catch (error) {
+      return res.json({ success: false, data: error.message });
+    }
+  }
+
   // regex documentations -> https://www.mongodb.com/docs/manual/reference/operator/query/regex/
   // i - case insensitivity
   // $regex -- for partial matching

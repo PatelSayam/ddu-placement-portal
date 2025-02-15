@@ -8,9 +8,10 @@ const {
   INTERNAL_SERVER_ERROR,
 } = require("../../constants/constantsMessages");
 
-const registerNewStudentWithEmail = async (req, res) => {
-  const { collegeEmails } = req.body;
+const registerNewStudentWithEmail = async (req, res) => { 
 
+  const { collegeEmails } = req.body;  
+  
   if (!collegeEmails) {
     return res
       .status(INVALID_REQUEST_DATA_CODE)
@@ -65,6 +66,7 @@ const registerNewStudentWithEmail = async (req, res) => {
 
   try {
     const savedStudents = await Student.bulkSave(students);
+    console.log("savedStudents", savedStudents);
     return res.json({
       success: true,
       data: { alreadyRegistered, successfullyRegistered, incorrectEmails },

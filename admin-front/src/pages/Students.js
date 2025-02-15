@@ -20,21 +20,23 @@ const Students = () => {
   const [showFilter, setShowFilter] = useState(false);
   const navigate = useNavigate();
 
-  const fetchStudents = async () => {
+  const fetchStudents = async (req, res) => {
     let filterURL = "";
+
     for (const query in filter) {
       filterURL += `${query}=${filter[query]}&`;
     }
 
-    return axios
-      .get(`/api/student?${filterURL}`, {
+    try {
+      const response = await axios.get(`/api/student?${filterURL}`, {
         withCredentials: true,
-      })
-      .then((response) => response.data)
-      .then((data) => data)
-      .catch((err) => {
-        console.log(err);
       });
+      console.log(response.data);
+      return response?.data;      
+    } catch (error) {
+      return res.json({ success: false, error: error.message});
+    }
+    
   };
 
   const handleFilterChange = (e) => {
