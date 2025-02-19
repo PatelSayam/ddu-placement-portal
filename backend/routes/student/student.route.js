@@ -31,24 +31,42 @@ const { uploadResume } = require("../../controllers/student/uploadResume");
 const verifyLoggedIn = require("../../middleware/verifyLoggedIn");
 const verifyStudent = require("../../middleware/verifyStudent");
 
-router.get("/", verifyLoggedIn,getStudent);
-router.delete("/:stuId", verifyAdmin,deleteStudentById);
+// Import new controller functions for handling round status
+const {
+  updateRoundStatus,
+  getStudentRounds,
+} = require("../../controllers/student/updateStatus"); // Correct import
+
+// Existing routes
+
+router.get("/", verifyLoggedIn, getStudent);
+router.delete("/:stuId", verifyAdmin, deleteStudentById);
 
 // register new student with email
-router.post("/new", verifyAdmin,registerNewStudentWithEmail);
+router.post("/new", verifyAdmin, registerNewStudentWithEmail);
 
 // update the existing user
-router.put("/update", verifyLoggedIn,updateStudentDetails);
+router.put("/update", verifyLoggedIn, updateStudentDetails);
 
 // update password
-router.put("/updatePassword", verifyLoggedIn,updatePassword);
+router.put("/updatePassword", verifyLoggedIn, updatePassword);
 
 // get student's applications with roles
-router.get("/:stuId/applications", verifyLoggedIn,getStudentApplications);
+router.get("/:stuId/applications", verifyLoggedIn, getStudentApplications);
 
 router.post("/forgot-password", forgetPassword);
 
 router.post("/profile-pic", verifyStudent, uploadProfilePic);
-router.post("/resume", verifyStudent ,uploadResume);
+router.post("/resume", verifyStudent, uploadResume);
+
+// New route to update round status for a student
+router.post("/update-round-status", verifyLoggedIn, updateRoundStatus);
+
+// New route to get the rounds for a student applying to a specific company
+router.get(
+  "/:stuId/companies/:companyId/rounds",
+  verifyLoggedIn,
+  getStudentRounds
+);
 
 module.exports = router;

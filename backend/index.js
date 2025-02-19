@@ -195,53 +195,66 @@ app.post("/api/Register", async (req, res) => {
 
 
 // Set up Multer for file uploads
-const storage = multer.memoryStorage(); // Using memoryStorage to avoid saving to disk
-const upload = multer({ storage: storage, limits: { fileSize: 10 * 1024 * 1024 } }); // 10MB limit
+// app.post('/upload', upload.single('file'), async (req, res) => {
+//   const filePath = req.file.path;
 
-app.post('/uploadpdf', upload.single('pdf'), async (req, res) => {
-  if (!req.file) {
-    console.log('No file uploaded');
-    return res.status(400).send('No file uploaded.');
-  }
+//   try {
+//     const pdfBytes = fs.readFileSync(filePath);
+//     const pdfDoc = await PDFDocument.load(pdfBytes);
+//     const pages = pdfDoc.getPages();
+//     let text = '';
 
-  try {
-    console.log('File uploaded:', req.file.originalname); // Log file info
+//     // Extract text from each page
+//     pages.forEach((page) => {
+//       text += page.getTextContent().items.map(item => item.str).join(' ') + ' ';
+//     });
 
-    const pdfBuffer = req.file.buffer;
-    console.log('PDF buffer received, size:', pdfBuffer.length);  // Log buffer size
+//     // Call the function to extract keywords from the text
+//     const extractedKeywords = extractKeywords(text);
+//     res.json(extractedKeywords);
 
-    const pdfText = await pdfParse(pdfBuffer).catch((err) => {
-      console.error('Error parsing PDF:', err);
-      throw new Error('PDF parsing failed');
-    });
-    console.log('PDF text parsed:', pdfText.text.slice(0, 100));  // Log a snippet of the text
+//   } catch (error) {
+//     res.status(500).send('Error processing the PDF.'+error);
+//   }
+// });
 
-    const importantKeywords = extractKeywords(pdfText.text);
-    console.log('Keywords extracted:', importantKeywords);
+// // Keyword extraction function
+// function extractKeywords(text) {
+//   const keywords = {
+//     location: findLocation(text),
+//     jobRole: findJobRole(text),
+//     stipend: findStipend(text),
+//     techStack: findTechStack(text),
+//   };
+//   return keywords;
+// }
 
-    res.json({
-      status: 'success',
-      data: importantKeywords,
-    });
-  } catch (error) {
-    console.error('Error during file processing:', error); // Log error details
-    res.status(500).send('Error processing the PDF.');
-  }
-});
+// // Helper functions to find specific keywords
+// function findLocation(text) {
+//   const locationMatch = text.match(/(?:Location|City|Area):\s*(\w+(\s\w+)?)/i);
+//   return locationMatch ? locationMatch[1] : null;
+// }
 
-// Extract keywords using compromise NLP
-function extractKeywords(text) {
-  const nlpDoc = compromise(text);
-  const roles = nlpDoc.match('#JobTitle').out('array');
-  const locations = nlpDoc.match('#City').out('array');
-  const salary = nlpDoc.match('#Money').out('array');
+// function findJobRole(text) {
+//   const roles = ['developer', 'engineer', 'designer'];
+//   for (const role of roles) {
+//     if (text.toLowerCase().includes(role)) {
+//       return role;
+//     }
+//   }
+//   return null;
+// }
 
-  return {
-    roles,
-    locations,
-    salary,
-  };
-}
+// function findStipend(text) {
+//   const stipendMatch = text.match(/\b(\d+)\s*(?:USD|INR|$)/i);
+//   return stipendMatch ? stipendMatch[1] : null;
+// }
+
+// function findTechStack(text) {
+//   const techKeywords = ['JavaScript', 'React', 'Node.js', 'Python', 'Java'];
+//   const foundTech = techKeywords.filter((tech) => text.includes(tech));
+//   return foundTech.length > 0 ? foundTech : null;
+// }
 
 
 // Starting the server (listening on a specified port)

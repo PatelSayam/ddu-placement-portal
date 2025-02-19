@@ -8,7 +8,9 @@ const bcrypt = require("bcrypt"); // bcrypt for hashing and comparing passwords 
 const {
   NO_EMAIL, // Error message for missing email
   NO_PASSWORD, // Error message for missing password
-  WRONG_CREDENTIALS, // Error message for incorrect credentials
+  WRONG_CREDENTIALS,
+  USER_NOT_FOUND,
+  WRONG_CREDENTIALS_PASSWORD, // Error message for incorrect credentials
 } = require("../../constants/constantsMessages");
 
 // Route to get the current session details (e.g., whether user is logged in or not)
@@ -31,7 +33,7 @@ router.post("/admin/login", (req, res) => {
     .then((foundAdmin) => {
       // If the admin is not found, send an error response
       if (!foundAdmin)
-        return res.json({ success: false, msg: WRONG_CREDENTIALS });
+        return res.json({ success: false, msg: USER_NOT_FOUND });
 
       // Compare the input password with the stored hashed password using bcrypt
       bcrypt.compare(password, foundAdmin.password, (err, isMatch) => {
@@ -39,7 +41,7 @@ router.post("/admin/login", (req, res) => {
         if (err) return res.json({ success: false, msg: "Error comparing passwords" });
 
         // If the password doesn't match, return an error message
-        if (!isMatch) return res.json({ success: false, msg: WRONG_CREDENTIALS });
+        if (!isMatch) return res.json({ success: false, msg: WRONG_CREDENTIALS_PASSWORD });
 
         // If the password matches, create a session for the admin
         req.session.studentId = null; // Ensure no student session is active
@@ -64,6 +66,7 @@ router.post("/admin/login", (req, res) => {
 });
 
 // Student Login Route
+// Login Route
 router.post("/student/login", async (req, res) => {
   const { email, password } = req.body; // Destructure email and password from the request body
 
@@ -76,34 +79,58 @@ router.post("/student/login", async (req, res) => {
   // Find the student by their college email in the database
   Student.findOne({ collegeEmail: email })
     .then((foundStudent) => {
-      // If the student is not found, send an error response
+      // If the student is not found, send a response with error message
       if (!foundStudent)
-        return res.json({ success: false, msg: WRONG_CREDENTIALS });
+        return res.json({ success: false, msg: USER_NOT_FOUND });
 
+      // Debug: Log the stored password and input password
+      console.log("Input password:", password);
+      console.log("Stored password hash:", foundStudent.password);
+
+      const isMatch = password === foundStudent.password?1:0;
+
+      // If the password doesn't match, return an error message
+      if (!isMatch) return res.json({ success: false, msg: WRONG_CREDENTIALS_PASSWORD });
+
+      // If the password matches, create a session for the student
+      req.session.email = foundStudent.collegeEmail; // Set the student's email in the session
+      req.session.isAdmin = false; // Mark the session as not admin
+      req.session.isStudent = true; // Mark the session as student
+      req.session.studentId = foundStudent._id; // Store the student's unique ID in the session
+      req.session.adminId = null; // Ensure no admin session is active
+
+      const user = {
+             studentId: foundStudent._id,
+            isVerified: foundStudent.isVerified, // Include student's verification status
+          };
+          return res.json({ success: true, data: user });
+
+          console.log(user);
       // Compare the input password with the stored hashed password using bcrypt
-      bcrypt.compare(password, foundStudent.password, (err, isMatch) => {
-        // If there is an error comparing passwords, return an error message
-        if (err) return res.json({ success: false, msg: "Error comparing passwords" });
+      // bcrypt.compare(password, foundStudent.password, (err, isMatch) => {
+      //   // If there is an error comparing passwords, return an error message
+      //   if (err) return res.json({ success: false, msg: "Error comparing passwords" });
 
-        // If the password doesn't match, return an error message
-        if (!isMatch) return res.json({ success: false, msg: WRONG_CREDENTIALS });
+      //   // If the password doesn't match, return an error message
+      //   if (!isMatch) return res.json({ success: false, msg: WRONG_CREDENTIALS_PASSWORD });
 
-        // If the password matches, create a session for the student
-        req.session.email = foundStudent.collegeEmail; // Set the student's email in the session
-        req.session.isAdmin = false; // Mark the session as not admin
-        req.session.isStudent = true; // Mark the session as student
-        req.session.studentId = foundStudent._id; // Store the student's unique ID in the session
-        req.session.adminId = null; // Ensure no admin session is active
+      //   // If the password matches, create a session for the student
+      //   req.session.email = foundStudent.collegeEmail; // Set the student's email in the session
+      //   req.session.isAdmin = false; // Mark the session as not admin
+      //   req.session.isStudent = true; // Mark the session as student
+      //   req.session.studentId = foundStudent._id; // Store the student's unique ID in the session
+      //   req.session.adminId = null; // Ensure no admin session is active
 
-        // Define the user object to return, including the student's ID and verification status
-        const user = {
-          studentId: foundStudent._id,
-          isVerified: foundStudent.isVerified, // Include student's verification status
-        };
+      //   // Define the user object to return, including the student's ID and verification status
+      //   const user = {
+      //     studentId: foundStudent._id,
+      //     isVerified: foundStudent.isVerified, // Include student's verification status
+      //   };
 
-        // Send a successful response with the user data (student ID and verification status)
-        return res.json({ success: true, data: user });
-      });
+      //   // Send a successful response with the user data (student ID and verification status)
+      //   return res.json({ success: true, data: user });
+      // }
+      // );
     })
     .catch((error) => {
       // If there is an error during the database query, log the error and return an error response

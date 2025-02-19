@@ -46,7 +46,7 @@ const Navbar = ({ focusOn }) => {
           open ? "flex" : "hidden"
         }  mt-5  justify-center lg:flex lg:flex-row lg:mt-0 `}
       >
-        {/* icon box - students */}
+        {/* icon box - companies */}
         <Link to="/admin/companies">
           <div
             className={`flex gap-8 items-center ${
@@ -57,6 +57,8 @@ const Navbar = ({ focusOn }) => {
             <span className="font-light text-xl">Companies</span>
           </div>
         </Link>
+
+        {/* icon box - students */}
         <Link to="/admin/students">
           <div
             className={`flex gap-8 items-center  ${
@@ -67,6 +69,20 @@ const Navbar = ({ focusOn }) => {
             <span className="font-light text-xl">Students</span>
           </div>
         </Link>
+
+        {/* New link for managing student status */}
+        {/* <Link to="/admin/manage-student-status">
+          <div
+            className={`flex gap-8 items-center  ${
+              focusOn === "manage-student-status" ? "bg-hover" : ""
+            }  rounded-md px-2 py-1 hover:bg-hover`}
+          >
+            <AiOutlineUserSwitch className="text-2xl" /> 
+            <span className="font-light text-xl">Manage Student Status</span>
+          </div>
+        </Link> */}
+
+        {/* icon box - reports */}
         <Link to="/admin/reports">
           <div
             className={`flex gap-8 items-center  ${
@@ -77,6 +93,8 @@ const Navbar = ({ focusOn }) => {
             <span className="font-light text-xl">Reports</span>
           </div>
         </Link>
+
+        {/* Logout */}
         <Link to="/admin/login">
           <div
             className={`flex gap-8 items-center  rounded-md px-2 py-1 hover:bg-hover`}

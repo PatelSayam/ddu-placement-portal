@@ -33,6 +33,8 @@ export const Login = () => {
         withCredentials: true,
       });
 
+      console.log(data);
+
       if (data.success === true) {
         localStorage.setItem("stuId", data.data.studentId);
         if (data.data.isVerified) {

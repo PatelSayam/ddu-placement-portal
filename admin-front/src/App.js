@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "./App.css";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
+import { Link } from "react-router-dom";
 
 function App() {
   const [cookies, setCookie, removeCookie] = useCookies("user");

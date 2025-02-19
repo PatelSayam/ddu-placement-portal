@@ -79,6 +79,26 @@ const getCompany = async (req, res) => {
 
   // regex documentations -> https://www.mongodb.com/docs/manual/reference/operator/query/regex/
   // i - case insensitivity
+  // find companies batchwise
+  try {
+    const foundCompanies = await Company.find({
+      $and: [
+        {
+          forBatch: forBatch ? { $eq: Number(forBatch) } : { $gte: 0 }          
+        },
+        {
+          isActive: true
+        } 
+      ]
+    })
+    if(foundCompanies.length === 0)
+      return res.json({ success: false, data: [] });
+
+    return res.json({ success: true, data: foundCompanies });
+  } catch(err) {
+    return res.json({ success: false, data: err.message});
+  }
+  
   Company.find({
     $and: [
       {

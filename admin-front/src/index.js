@@ -1,3 +1,4 @@
+// index.js - Update routing to include new page for managing student round status
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
@@ -5,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./pages/Login";
 import Students from "./pages/Students";
-
 import { QueryClient, QueryClientProvider } from "react-query";
 import Reports from "./pages/Reports";
 import PageNotFound from "./pages/PageNotFound";
@@ -22,6 +22,10 @@ import { ToastContainer } from "react-toastify";
 import ManagePlaced from "./pages/ManagePlaced";
 import RoleView from "./pages/RoleView";
 import UploadPDF from "./pages/UploadPDF";
+
+// New import for the ManageStudentStatus page
+import ManageStudentStatus from "./pages/ManageStudentStatus"; // <-- New page import
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const router = createBrowserRouter([
@@ -85,10 +89,15 @@ const router = createBrowserRouter([
     path: "/admin/reports",
     element: <Reports />,
   },
-  {
-    path: "/admin/uploadpdf",
-    element: <UploadPDF/>,
-  },
+  // {
+  //   path: "/admin/uploadpdf",
+  //   element: <UploadPDF/>,
+  // },
+  // New route to manage student status
+  // {
+  //   path: "/admin/manage-student-status",
+  //   element: <ManageStudentStatus />, // <-- New route added here
+  // },
   {
     path: "/*",
     element: <PageNotFound />,
@@ -105,7 +114,7 @@ root.render(
         position="bottom-left"
         autoClose={4000}
         hideProgressBar={false}
-        closeOnClic={true}
+        closeOnClick={true}
         pauseOnHover={true}
         draggable={true}
         progress={undefined}
@@ -114,8 +123,3 @@ root.render(
     </QueryClientProvider>
   </React.StrictMode>
 );
-
-/*
-<QueryClientProvider client={queryClient}> 
-  -> provides the instance to the rest of the application, enabling the use of React Query for data fetching and caching.
-*/

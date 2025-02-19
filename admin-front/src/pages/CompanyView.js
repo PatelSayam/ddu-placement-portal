@@ -495,7 +495,7 @@ const CompanyView = () => {
               {/* Add new role */}
               <button
                 className="flex flex-row gap-2 justify-center bg-lightHover px-2 py-1 rounded-md"
-                onClick={(e) => handleAddRole(e)}
+                onClick={(e) => handleAddRole(e,rolesWatch, setValue)}
               >
                 <span className="text-xl"> Add Role</span>
                 <AiOutlineUsergroupAdd size={32} />
