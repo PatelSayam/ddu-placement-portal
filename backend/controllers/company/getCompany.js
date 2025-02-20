@@ -75,32 +75,6 @@ const getCompany = async (req, res) => {
         ...comapny._doc,
       },
     });
-<<<<<<< HEAD
-=======
-  }  
-  
-  // get companies batchwise
-  if(forBatch) {      
-    try {
-      const foundCompanies = await Company.find({
-        $and: [
-          {
-            forBatch: forBatch ? { $eq: Number(forBatch) } : { $gte: 0 }          
-          },
-          {
-            isActive: true
-          } 
-        ]
-      })
-      if(foundCompanies.length === 0) {
-        return res.json({ success: false, data: [] });
-      }
-
-      return res.json({ success: true, data: foundCompanies });
-    } catch(err) {
-      return res.json({ success: false, data: err.message});
-    }
->>>>>>> parent of 1665bd1 (fixed the isActive toggle bug on admin company view page)
   }
 
   // regex documentations -> https://www.mongodb.com/docs/manual/reference/operator/query/regex/
@@ -112,9 +86,9 @@ const getCompany = async (req, res) => {
         {
           forBatch: forBatch ? { $eq: Number(forBatch) } : { $gte: 0 }          
         },
-        {
-          isActive: true
-        } 
+        // {
+        //   isActive: true
+        // } 
       ]
     })
     if(foundCompanies.length === 0)

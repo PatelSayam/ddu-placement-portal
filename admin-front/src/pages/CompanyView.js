@@ -99,6 +99,24 @@ const CompanyView = () => {
     download(data, `${nameWatch}-Placed.xls`);
   };
 
+  const handleCompanyToggle = async (e) => {
+    setValue("isActive", !getValues("isActive"));
+    const newStatus = e.target.value
+    try {
+      // Update the status in the backend
+      await axios.put(
+        `/api/company/update?id=${id}`,
+        { isActive: newStatus }, // Send only the isActive state
+        { withCredentials: true }
+      );
+      toast.success(`Company is now ${newStatus ? "Activated" : "Inactive"}`);
+      setValue("isActive", newStatus); // Update form state
+    } catch (error) {
+      toast.error(error.response.data.message);
+      //toast.error("Error updating status");
+    }
+  };
+
   return (
     <div className="bg-backg min-h-screen text-white">
       {/* Navbar */}
@@ -127,7 +145,9 @@ const CompanyView = () => {
                 {...register("isActive")}
                 role="switch"
                 id="flexSwitchChecked"
-                // checked={getValue("isActive")}
+                onChange={handleCompanyToggle}
+                //onChange={setValue("isActive", !getValues("isActive"))}
+                checked={getValues("isActive")}
               />
               <label
                 class={`inline-block pl-[0.15rem] hover:cursor-pointer ${
@@ -495,7 +515,7 @@ const CompanyView = () => {
               {/* Add new role */}
               <button
                 className="flex flex-row gap-2 justify-center bg-lightHover px-2 py-1 rounded-md"
-                onClick={(e) => handleAddRole(e,rolesWatch, setValue)}
+                onClick={(e) => handleAddRole(e)}
               >
                 <span className="text-xl"> Add Role</span>
                 <AiOutlineUsergroupAdd size={32} />
