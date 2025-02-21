@@ -93,7 +93,7 @@ const router = createBrowserRouter([
 const queryClient = new QueryClient();
 
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
       <ToastContainer
@@ -107,7 +107,7 @@ root.render(
         theme="dark"
       />
     </QueryClientProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
 // const queryClient = new QueryClient();

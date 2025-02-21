@@ -8,7 +8,7 @@ const FormInputField = ({
   type,
   isEditable,
 }) => {
-  console.log("for name - type :", name, type);
+  // console.log("for name - type :", name, type);
   return (
     <div className="flex  flex-col gap-1 w-full md:w-2/5">
       <span className="text-placeholder">{title}</span>

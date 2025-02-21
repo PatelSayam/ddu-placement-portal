@@ -3,8 +3,8 @@ import { useQuery } from "react-query"
 import { HashLoader } from "react-spinners";
 import { Link } from "react-router-dom"
 import { Navbar } from "../Navbar/Navbar"
+import Company_enroll from "./Company_enroll"
 import axios from "axios";
-
 import FilterInputWithValue from "../FilterInputWithValue"
 
 function Available_company() {
@@ -38,7 +38,7 @@ function Available_company() {
             staleTime: Infinity
         }
     );
-
+    
     const handleFilterChange = (e) => {
         if(e.target.value) {
             e.target.style.border = "2px dotted green"
@@ -69,7 +69,7 @@ function Available_company() {
                 </div>
             ): (
                 // All companies
-                data?.data?.map((item) => {
+                data?.data?.map((item) => {                  
                     return (
                       <div key={item._id} className="bg-section rounded-md px-2 py-2">
                         <h2 className="text-xl font-semibold">{item.name}</h2>
@@ -93,39 +93,50 @@ function Available_company() {
                             let deadline = new Date(role.deadline);
                             let interviewDate = new Date(role.interviewDate);
                             return (
-                              <tr key={role.name + role.deadline} className="border-b-[1px] border-b-white">
-                                <td>{role.name}</td>
-                                <td>{role.avgPackage} LPA</td>
-                                <td className="capitalize">{role.type}</td>
-                                <td className="hidden md:inline">
-                                  {deadline.getDate() +
-                                    "-" +
-                                    deadline.getMonth() +
-                                    "-" +
-                                    deadline.getFullYear()}
-                                </td>
-                                <td className=" hidden lg:table-cell">
-                                  {interviewDate.getDate() +
-                                    "-" +
-                                    interviewDate.getMonth() +
-                                    "-" +
-                                    interviewDate.getFullYear()}
-                                </td>
-                                <td className=" hidden lg:table-cell capitalize">
-                                  {role.mode}
-                                </td>
-                              </tr>
+                              <>
+                                <tr key={role.name + role.deadline} className="border-b-[1px] border-b-white">
+                                  <td>{role.name}</td>
+                                  <td>{role.avgPackage} LPA</td>
+                                  <td className="capitalize">{role.type}</td>
+                                  <td className="hidden md:inline">
+                                    {deadline.getDate() +
+                                      "-" +
+                                      deadline.getMonth() +
+                                      "-" +
+                                      deadline.getFullYear()}
+                                  </td>
+                                  <td className=" hidden lg:table-cell">
+                                    {interviewDate.getDate() +
+                                      "-" +
+                                      interviewDate.getMonth() +
+                                      "-" +
+                                      interviewDate.getFullYear()}
+                                  </td>
+                                  <td className=" hidden lg:table-cell capitalize">
+                                    {role.mode}
+                                  </td>
+                                </tr>
+
+                                <Link
+                                    to="/Company_enroll"
+                                    state={{ company: item, roles: role }}
+                                  >
+                                    <button className="text-section bg-white rounded-sm  px-4 my-3">
+                                      Enroll
+                                    </button>
+                                  </Link>
+                              </>                              
                             );
                           })}
                         </table>
-                        <Link
-                          to={`/admin/companies/company-view/${item._id}`}
+                        {/* <Link
+                          to="/Company_enroll"
                           state={{ company: item }}
                         >
                           <button className="text-section bg-white rounded-sm  px-4 my-3">
                             Enroll
                           </button>
-                        </Link>
+                        </Link> */}
                       </div>
                     );
                   })

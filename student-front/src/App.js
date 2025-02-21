@@ -11,6 +11,7 @@ import { Homepage1 } from "./components/Homepage/Homepage1";
 import crypto from "crypto-js";
 import { Already_applied } from "./components/Already applied/Already_applied";
 import  Available_company  from "./components/Company/Available_company";
+import Company_enroll from "./components/Company/Company_enroll";
 import ChangePassword from "./components/User Profile/ChangePassword";
 import PageNotFound from "./components/Error/PageNotFound";
 import { ForgotPassword } from "./components/Form/ForgotPassword";
@@ -35,6 +36,7 @@ function App() {
           <Route exact path="/Profile" element={<Profile />} />
           <Route exact path="/Company/:id" element={<Fetch_id />} />
           <Route exact path="/Available_company" element={<Available_company />} />
+          <Route exact path="/Company_enroll" element={<Company_enroll/>} />
           <Route exact path="/AlreadyApplied" element={<Already_applied />} />
           <Route exact path="/changepassword" element={<ChangePassword />} />
           <Route exact path="/forgot-password" element={<ForgotPassword />} />

@@ -31,12 +31,11 @@ const Students = () => {
       const response = await axios.get(`/api/student?${filterURL}`, {
         withCredentials: true,
       });
-      console.log(response.data);
-      return response?.data;      
+            
+      return response?.data;
     } catch (error) {
       return res.json({ success: false, error: error.message});
     }
-    
   };
 
   const handleFilterChange = (e) => {

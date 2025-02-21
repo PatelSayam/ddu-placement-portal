@@ -35,6 +35,8 @@ const {
   uploadProfilePic,
 } = require("../../controllers/student/uploadProfilePic");
 
+const addApplication = require("../../controllers/student/addApplication");
+
 const { uploadResume } = require("../../controllers/student/uploadResume");
 const verifyLoggedIn = require("../../middleware/verifyLoggedIn");
 const verifyStudent = require("../../middleware/verifyStudent");
@@ -58,5 +60,8 @@ router.post("/forgot-password", forgetPassword);
 
 router.post("/profile-pic", verifyStudent, uploadProfilePic);
 router.post("/resume", verifyStudent ,uploadResume);
+
+// for add student applications in company
+router.put("/:stuId/:companyId/:roleId/add-application", verifyStudent, addApplication);
 
 module.exports = router;

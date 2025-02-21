@@ -86,15 +86,15 @@ const getCompany = async (req, res) => {
           {
             forBatch: forBatch ? { $eq: Number(forBatch) } : { $gte: 0 }          
           },
-          {
-            isActive: true
-          } 
+          // {
+          //   isActive: true || false
+          // } 
         ]
       })
       if(foundCompanies.length === 0) {
         return res.json({ success: false, data: [] });
       }
-
+      
       return res.json({ success: true, data: foundCompanies });
     } catch(err) {
       return res.json({ success: false, data: err.message});
