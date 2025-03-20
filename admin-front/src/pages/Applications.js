@@ -15,18 +15,21 @@ import FilterInput from "../components/FilterInput";
 
 const Applications = () => {
   // /company/:cid/role/:rid/applications
+  
   const { cid, rid } = useParams();
-  const [filter, setFilter] = useState({});
+  const [filter, setFilter] = useState({
+    forBatch: localStorage.getItem("year"),
+  });
   const [showFilter, setShowFilter] = useState(false);
   const navigate = useNavigate();
 
   const fetchApplications = async () => {
     let filterURL = "";
-
+    
     for (const query in filter) {
       filterURL += `${query}=${filter[query]}&`;
     }
-
+    console.log("filterUrl is",filterURL);
     return axios
       .get(`/api/company/${cid}/role/${rid}?${filterURL}`, {
         withCredentials: true,
@@ -93,7 +96,7 @@ const Applications = () => {
             <span className="text-placeholder">Interview Mode</span>
             <input
               name="mode"
-              className="outline-none px-4 py-1 rounded-md bg-subSection"
+              className="outline-none px-4 py-1 rounded-md bg-subSection focus:ring-2"
               value={data?.role.interviewMode}
               disabled={true}
             />
@@ -109,7 +112,7 @@ const Applications = () => {
               disabled={true}
             />
           </div>
-          {/* role.deadling */}
+          {/* role.deadline */}
           <div className="flex  flex-col gap-1 w-full md:w-1/6">
             <span className="text-placeholder">Deadline to apply</span>
             <input
@@ -132,8 +135,9 @@ const Applications = () => {
             />
           </div>
         </div>
+
         {/* View elli, Notify others BUTTON BOX */}
-        <div className="flex flx-row justify-end mt-2 ">
+        <div className="flex flx-row justify-end mt-2">
           <div className="flex flex-row gap-4">
             <button className="text-section  bg-white rounded-md px-4 py-2">
               <Link to={`/admin/company/${cid}/role/${rid}/elligibles`}>
@@ -152,6 +156,7 @@ const Applications = () => {
             </button>
           </div>
         </div>
+
         {/*  Filters*/}
         <div className="bg-subSection px-2 py-3 rounded-lg">
           <div className="flex flex-row justify-between items-center  ">

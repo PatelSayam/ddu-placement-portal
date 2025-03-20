@@ -41,7 +41,7 @@ const NotifyStudents = () => {
     for (const query in filter) {
       filterURL += `${query}=${filter[query]}&`;
     }
-
+    
     return axios
       .get(`/api/student?${filterURL}`, {
         withCredentials: true,
@@ -107,6 +107,8 @@ const NotifyStudents = () => {
       keepPreviousData: true,
     }
   );
+
+  console.log("data at notify", data);
 
   const {
     data: cData,

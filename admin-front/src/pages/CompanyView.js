@@ -19,14 +19,14 @@ import download from "downloadjs";
 
 const CompanyView = () => {
   const { id } = useParams();
-  
+
   const [company, setCompany] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
   const [refetchFlag, setRefetchFlag] = useState(false);
   const [showDeleteModel, setShowDeleteModel] = useState(false);
   const navigate = useNavigate();
-  
+
   const {
     register,
     handleSubmit,
@@ -67,7 +67,7 @@ const CompanyView = () => {
     setIsLoading(false);
   }, [refetchFlag]);
 
-  const nameWatch = watch("name");
+  const nameWatch = watch("name");    
   const rolesWatch = watch("roles");
   const isActiveWatch = watch("isActive");
   const handleDuplicate = () => {};
@@ -91,14 +91,29 @@ const CompanyView = () => {
 
   const handlePlacedStudentsReportDownload = async () => {
     toast.success("Download will begin shortly...");
-    const { data, status } = await axios.get(
-      `/api/company/${id}/placed`,
-      {
-        withCredentials: true,
-        responseType: "blob",
-      }
-    );
+    const { data, status } = await axios.get(`/api/company/${id}/placed`, {
+      withCredentials: true,
+      responseType: "blob",
+    });
     download(data, `${nameWatch}-Placed.xls`);
+  };
+
+  const handleCompanyToggle = async (e) => {
+    setValue("isActive", !getValues("isActive"));
+    const newStatus = e.target.value
+    try {
+      // Update the status in the backend
+      await axios.put(
+        `/api/company/update?id=${id}`,
+        { isActive: newStatus }, // Send only the isActive state
+        { withCredentials: true }
+      );
+      toast.success(`Company is now ${newStatus ? "Activated" : "Inactive"}`);
+      setValue("isActive", newStatus); // Update form state
+    } catch (error) {
+      toast.error(error.response.data.message);
+      //toast.error("Error updating status");
+    }
   };
 
   return (
@@ -107,7 +122,7 @@ const CompanyView = () => {
       <Navbar focusOn="companies" />
 
       {/* Wrapper div */}
-      
+
       <div className="px-2 py-5 flex flex-col gap-8 md:px-8 lg:px-12">
         {isLoading ? (
           <div className="flex flex-row justify-center mt-12">
@@ -129,7 +144,8 @@ const CompanyView = () => {
                 {...register("isActive")}
                 role="switch"
                 id="flexSwitchChecked"
-                // checked={getValue("isActive")}
+                checked={getValues("isActive")}
+                onChange={handleCompanyToggle}
               />
               <label
                 class={`inline-block pl-[0.15rem] hover:cursor-pointer ${
@@ -143,8 +159,7 @@ const CompanyView = () => {
 
             <div className="flex flx-row justify-end my-2  ">
               <div className="flex flex-row gap-4 ">
-                
-              <button
+                <button
                   className="text-section flex flex-row flex-wrap gap-3 self-start  bg-white rounded-md px-4 py-2"
                   onClick={handlePlacedStudentsReportDownload}
                 >
@@ -268,13 +283,11 @@ const CompanyView = () => {
                   <>
                     {/* Remove this role */}
                     <div className="flex flex-row w-full justify-between">
-                        <Link
-                          to={`/admin/company/${id}/role/${role._id}`}
-                        >
-                      <button className="text-section  bg-white rounded-md px-4 py-2">
+                      <Link to={`/admin/company/${id}/role/${role._id}`}>
+                        <button className="text-section  bg-white rounded-md px-4 py-2">
                           View More
-                      </button>
-                        </Link>
+                        </button>
+                      </Link>
                       <button
                         className="flex flex-row  gap-2 justify-center bg-lightHover px-2 py-1 rounded-md"
                         onClick={(e) => handleRemoveRole(e, roleIndex)}

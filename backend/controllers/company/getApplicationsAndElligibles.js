@@ -296,7 +296,7 @@ const getApplicationsAndElligibles = async (req, res) => {
     );
 
     data.applications = applications;
-    data.elligibles = elligibles;
+    data.elligibles = elligibles;    
 
     return res.json({ success: true, data: data });
   } catch (err) {

@@ -14,8 +14,13 @@ import FilterInput from "../components/FilterInput";
 
 const Elligibles = () => {
   // /company/:cid/role/:rid/applications
-  const { cid, rid } = useParams();
-  const [filter, setFilter] = useState({});
+  
+  const { cid, rid } = useParams();  
+
+  const [filter, setFilter] = useState({
+    forBatch: localStorage.getItem("year"),
+  });
+  
   const [showFilter, setShowFilter] = useState(false);
   const navigate = useNavigate();
 
@@ -26,8 +31,8 @@ const Elligibles = () => {
       filterURL += `${query}=${filter[query]}&`;
     }
 
-    console.log("FilterURL", filterURL);
-
+    // console.log("FilterURL", filterURL);  // checked
+    
     return axios
       .get(`/api/company/${cid}/role/${rid}?${filterURL}`, {
         withCredentials: true,
@@ -35,7 +40,7 @@ const Elligibles = () => {
       .then((response) => response.data)
       .then((data) => data.data)
       .catch((err) => {
-        console.log(err);
+        console.log("Error is ", err);
       });
   };
 
@@ -108,7 +113,7 @@ const Elligibles = () => {
               disabled={true}
             />
           </div>
-          {/* role.deadling */}
+          {/* role.deadline */}
           <div className="flex  flex-col gap-1 w-full md:w-1/6">
             <span className="text-placeholder">Deadline to apply</span>
             <input
@@ -338,6 +343,7 @@ const Elligibles = () => {
               <tbody>
                 {/* All comapanies */}
                 {data?.elligibles?.map((item) => {
+                  console.log("Item", item);
                   return (
                     <tr
                       className="border-b-[1px] border-b-white bg-subSection hover:bg-lightHover hover:cursor-pointer even:bg-alternate"

@@ -39,6 +39,7 @@ const getStudent = async (req, res) => {
     state,
     postalCode,
   } = req.query;
+  
 
   if (id) {    
     if (!mongoose.isValidObjectId(id)) {
@@ -185,6 +186,7 @@ const getStudent = async (req, res) => {
         },
       ]
     });    
+    console.log("data is", foundStudent);
     return res.json({ success: true, data: foundStudent});    
   } catch(err) {
     return res
