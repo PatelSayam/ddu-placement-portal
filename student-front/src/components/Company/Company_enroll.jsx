@@ -2,6 +2,7 @@ import React from 'react'
 import { useLocation } from "react-router-dom"
 import getStuId from '../../utils/getStuId';
 import { toast, ToastContainer } from "react-toastify";
+import { Navbar } from "../Navbar/Navbar";
 
 import axios from "axios"
 
@@ -32,9 +33,13 @@ const Company_enroll = () => {
     }
 
     return (
+
+      <>
+        <Navbar />
+
         <div className="bg-backg min-h-screen p-6">
           <h1 className="text-2xl font-bold">{company.name}</h1>
-    
+
           <div className="mt-4 p-4 bg-white rounded shadow-md">
             <h2 className="text-xl font-semibold">Company Details</h2>
             <p><strong>Role:</strong> {roles?.name}</p>
@@ -44,11 +49,13 @@ const Company_enroll = () => {
             <p><strong>Website:</strong> <a href={company.website} className="text-blue-500">{company.website}</a></p>
             <p><strong>Email:</strong> {company.email}</p>
           </div>
-    
+
           <button className="mt-4 bg-blue-500 text-white px-6 py-2 rounded" onClick={handleEnrollment}>
             Confirm Enrollment
           </button>
         </div>
+      </>
+      
       );
 
   return (

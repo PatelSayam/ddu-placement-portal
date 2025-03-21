@@ -16,10 +16,11 @@ const addApplication = async (req, res) => {
           .status(INVALID_REQUEST_DATA_CODE)
           .json({ success: false, msg: INVALID_REQUEST_DATA });
       }
-        
+          // console.log(roleId)
     const company = await Company.findOne({ _id: companyId });
     const role = company?.roles?.find((role) => role._id == roleId);
-    
+    // console.log("role",role)
+    // console.log("applications", role.applications)
     if(role?.applications.includes(stuId)) {
         return res.json({ success: false, message: "Already applied"});
     }

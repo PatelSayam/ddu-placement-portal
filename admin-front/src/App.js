@@ -1,62 +1,112 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
-import "./App.css";
-import Footer from "./components/Footer";
-import Navbar from "./components/Navbar";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
 
-function App() {
-  const [cookies, setCookie, removeCookie] = useCookies("user");
-  const [count, setCount] = useState(0);
-  const navigate = useNavigate();
+import Reports from "./pages/Reports";
+import PageNotFound from "./pages/PageNotFound";
+import Companies from "./pages/Companies";
+import CompanyView from "./pages/CompanyView";
+import CreateCompany from "./pages/CreateCompany";
+import StudentView from "./pages/StudentView";
+import Applications from "./pages/Applications";
+import Elligibles from "./pages/Elligibles";
+import NotifyStudents from "./pages/NotifyStudents";
+import RegisterStudent from "./pages/RegisterStudent";
+import CreateCompany1 from "./pages/CreateCompany1";
+import { ToastContainer } from "react-toastify";
+import ManagePlaced from "./pages/ManagePlaced";
+import RoleView from "./pages/RoleView";
+import Login from "./pages/Login";
+import Students from "./pages/Students";
 
-  useEffect(() => {
-    if (!cookies.user) navigate("/login");
-  }, []);
-
-  const increase = () => {
-    setCount(count + 1);
-  };
-
-  const handleLogout = async () => {
-    removeCookie("user");
-    axios
-      .post("/api/auth/logout", { withCredentials: true })
-      .then((response) => {
-        return response.data;
-      })
-      .then((data) => {
-        //Placeholdr for additional actions with the response data
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    navigate("/login");
-  };
-
+const App = () => {
+  const router = createBrowserRouter([
+    {
+      path:"/",
+      element:<Login />
+    },
+    {
+      path: "/admin",
+      element: <Companies />,
+    },
+    {
+      path: "/admin/login",
+      element: <Login />,
+    },
+    {
+      path: "/admin/students",
+      element: <Students />,
+    },
+    {
+      path: "/admin/students/register",
+      element: <RegisterStudent />,
+    },
+    {
+      path: "/admin/companies",
+      element: <Companies />,
+    },
+    {
+      path: "/admin/companies/company-view/:id",
+      element: <CompanyView />,
+    },
+    {
+      path: "/admin/students/student-view/:id",
+      element: <StudentView />,
+    },
+    {
+      path: "/admin/companies/create-post",
+      element: <CreateCompany1 />,
+    },
+    {
+      path: "/admin/company/:cid/role/:rid",
+      element: <RoleView />,
+    },
+    {
+      path: "/admin/company/:cid/role/:rid/applications",
+      element: <Applications />,
+    },
+    {
+      path: "/admin/company/:cid/role/:rid/placed",
+      element: <ManagePlaced/>,
+    },
+    {
+      path: "/admin/company/:cid/role/:rid/elligibles",
+      element: <Elligibles />,
+    },
+    {
+      path: "/admin/company/:cid/role/:rid/notify",
+      element: <NotifyStudents />,
+    },
+    {
+      path: "/admin/reports",
+      element: <Reports />,
+    },
+    {
+      path: "/*",
+      element: <PageNotFound />,
+    },
+  ]);
+  
+const queryClient = new QueryClient();  
+  
   return (
-    <div className="bg-backg grid grid-cols-12 ">
-      <Navbar />
-
-      <div className="col-start-3 col-end-13 text-white">
-        <button onClick={handleLogout}>Logout</button>
-        <button onClick={increase}>+</button>
-        <h1>This is the home page</h1>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore
-          minima ratione placeat recusandae repellat voluptas veritatis. Esse
-          nobis magni voluptates ea, rem officiis cupiditate odio enim
-          consectetur id nesciunt consequatur?
-        </p>
-        {new Array(20).fill(0).map((item, index) => (
-          <div className="bg-section w-64 h-52 m-4"></div>
-        ))}
-      </div>
-      
-      <Footer />
-    </div>
-  );
+    <>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        <ToastContainer
+          position="bottom-left"
+          autoClose={4000}
+          hideProgressBar={false}
+          closeOnClic={true}
+          pauseOnHover={true}
+          draggable={true}
+          progress={undefined}
+          theme="dark"
+        />
+      </QueryClientProvider>    
+    </>
+  )
+    
 }
 
 export default App;
