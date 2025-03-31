@@ -11,6 +11,7 @@ const Company_enroll = () => {
     const location = useLocation();
     const company = location.state?.company;    
     const roles = location.state?.roles;
+    console.log(roles)
 
     const studentId = getStuId();
 

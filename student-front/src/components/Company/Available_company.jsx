@@ -39,7 +39,7 @@ function Available_company() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 text-gray-900">
+        <div className="min-h-screen bg-gray-100 text-gray-900 bg-blue-50">
             <Navbar />
             <div className="max-w-4xl mx-auto p-4">
                 <FilterInputWithValue
@@ -89,7 +89,7 @@ function Available_company() {
                             <div className="flex justify-center mt-4">
                                 <Link
                                     to="/Company_enroll"
-                                    state={{ company: item }}
+                                    state={{ company: item, roles: item.role }}
                                     className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
                                 >
                                     Enroll
@@ -104,24 +104,3 @@ function Available_company() {
 }
 
 export default Available_company;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

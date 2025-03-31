@@ -1,5 +1,10 @@
 export const handleAddRole = (e, rolesWatch, setValue) => {
-  e.preventDefault();
+  e.preventDefault();  
+  
+  // Ensure rolesWatch is always an array
+  let roles = Array.isArray(rolesWatch) ? rolesWatch : [];
+
+  // Create a new role object
   let role = {
     name: "",
     avgPackage: 0,
@@ -16,16 +21,19 @@ export const handleAddRole = (e, rolesWatch, setValue) => {
       expectedSkills: "",
     },
   };
-  let roles = rolesWatch;
 
-  roles.push(role);
-  setValue("roles", roles);
+  let updatedRoles = [...roles, role];
+
+  setValue("roles", updatedRoles);
 };
+
 
 export const handleRemoveRole = (e, roleIndex, rolesWatch, setValue) => {
   e.preventDefault();
 
-  let roles = rolesWatch;
-  roles = roles.filter((role, index) => index !== roleIndex);
-  setValue("roles", roles);
+  // Filter out the role at the specified index
+  let updatedRoles = rolesWatch.filter((role, index) => index !== roleIndex);
+
+  // Set the updated roles array using setValue
+  setValue("roles", updatedRoles);
 };

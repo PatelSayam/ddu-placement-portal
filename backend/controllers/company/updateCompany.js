@@ -10,14 +10,15 @@ const Student = require("../../models/student/student.model");
 const { setStudentsElligibility } = require("../../utils/company.utils");
 
 const updateCompany = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.query;
+  console.log(id);
   if (!mongoose.isValidObjectId(id)) {
     return res
       .status(INVALID_REQUEST_DATA_CODE)
       .json({ success: false, msg: INVALID_REQUEST_DATA });
   }
 
-  const {
+  let {
     name,
     website,
     email,
@@ -27,6 +28,9 @@ const updateCompany = async (req, res) => {
     roles,
     isActive,
   } = req.body;
+
+  (isActive === "on") ? isActive = true : isActive = false;
+
 
   // if there is update in role then also update the corresponding elligibile students in a document
   if (forBatch && roles) {

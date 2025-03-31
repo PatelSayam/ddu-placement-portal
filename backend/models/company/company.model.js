@@ -7,7 +7,15 @@ const CompanySchema = mongoose.Schema({
   email: { type: String, required: true },
   forBatch: { type: Number, required: true },
   description: { type: String },
-  isActive: { type: Boolean, default: true, required: true },
+  isActive: { type: Boolean, required: true },
+  // rounds: [
+  //   {
+  //     roundName: { type: String, required: true }, // Round name like "Technical Interview", "HR Interview"
+  //     roundDescription: { type: String }, // Optional: Add more details about the round
+  //     roundOrder: { type: Number, required: true }, // Optional: The order of the round
+  //     // You can add more fields like round duration, type of interview, etc.
+  //   },
+  // ],
   roles: {
     type: [
       mongoose.Schema({

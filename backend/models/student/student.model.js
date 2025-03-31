@@ -136,6 +136,23 @@ const StudentSchema = mongoose.Schema({
     type: Map,
     of: mongoose.Schema({
       role: { type: [String] },
+      rounds: [
+        {
+          roundName: { type: String, required: true }, // Example: "Round 1", "Round 2"
+          status: {
+            type: String,
+            enum: [
+              "applied",
+              "cleared",
+              "rejected",
+              "interviewScheduled",
+              "selected",
+              "notSelected",
+            ],
+            default: "applied", // Default to applied
+          },
+        },
+      ],
     }),
   },
 });

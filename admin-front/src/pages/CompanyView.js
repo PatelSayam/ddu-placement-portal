@@ -96,11 +96,12 @@ const CompanyView = () => {
       responseType: "blob",
     });
     download(data, `${nameWatch}-Placed.xls`);
-  };
+  }; 
 
-  const handleCompanyToggle = async (e) => {
+  const handleCompanyToggle = async (e) => {    
     setValue("isActive", !getValues("isActive"));
-    const newStatus = e.target.value
+    const newStatus = e.target.value;
+    
     try {
       // Update the status in the backend
       await axios.put(
@@ -116,6 +117,7 @@ const CompanyView = () => {
     }
   };
 
+  
   return (
     <div className="bg-backg min-h-screen text-white">
       {/* Navbar */}
@@ -144,8 +146,9 @@ const CompanyView = () => {
                 {...register("isActive")}
                 role="switch"
                 id="flexSwitchChecked"
-                checked={getValues("isActive")}
                 onChange={handleCompanyToggle}
+                //onChange={setValue("isActive", !getValues("isActive"))}
+                checked={getValues("isActive")}
               />
               <label
                 class={`inline-block pl-[0.15rem] hover:cursor-pointer ${
@@ -290,7 +293,7 @@ const CompanyView = () => {
                       </Link>
                       <button
                         className="flex flex-row  gap-2 justify-center bg-lightHover px-2 py-1 rounded-md"
-                        onClick={(e) => handleRemoveRole(e, roleIndex)}
+                        onClick={(e) => handleRemoveRole(e, roleIndex, rolesWatch, setValue)}
                       >
                         <span className=""> Delete Role</span>
                         <AiOutlineUsergroupDelete size={24} />
@@ -510,7 +513,7 @@ const CompanyView = () => {
               {/* Add new role */}
               <button
                 className="flex flex-row gap-2 justify-center bg-lightHover px-2 py-1 rounded-md"
-                onClick={(e) => handleAddRole(e)}
+                onClick={(e) => handleAddRole(e, rolesWatch, setValue)}
               >
                 <span className="text-xl"> Add Role</span>
                 <AiOutlineUsergroupAdd size={32} />

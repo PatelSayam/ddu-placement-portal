@@ -21,7 +21,7 @@ const CreateCompany1 = () => {
 
   const initialCompany = location.state
     ? { ...location.state, _id: "", applications: [], elligibles: [] }
-    : newCompanyStarter;
+    : newCompanyStarter;  
 
   const [isCreating, setIsCreating] = useState(false);
   const {
@@ -45,11 +45,12 @@ const CreateCompany1 = () => {
   // }, [location.state]);
 
   const createCompany = async (company) => {
+    console.log("created company is",company);
     setIsCreating(true);
     try {
       const { data } = await axios.post(`/api/company/new`, company, {
         withCredentials: true,
-      });
+      });      
 
       if (data?.success === true) {
         toast.success("Company Created ✅");

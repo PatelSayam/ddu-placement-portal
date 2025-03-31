@@ -21,6 +21,8 @@ const verifyStudent = require("./middleware/verifyStudent");
 const verifyAdmin = require("./middleware/verifyAdmin");
 const adminModel = require("./models/admin/admin.model");
 const verifyLoggedIn = require("./middleware/verifyLoggedIn");
+const axios = require('axios');
+
 
 env.config();
 
@@ -98,11 +100,11 @@ app.get("/api", (req, res) => {
   res.json({ msg: "server is up and running!" }); // Respond with a simple JSON message
 });
 
-app.use("/api/auth", AuthRoute); // Authentication-related routes (login, signup, etc.)
-app.use("/api/student", StudentRoute); // Routes for student-related actions
-app.use("/api/admin", AdminRoute); // Routes for admin-related actions
-app.use("/api/company", CompanyRoute); // Routes for company-related actions
-app.use("/api/reports", verifyAdmin, ReportsRoute); // Routes for reports, protected by admin verification
+app.use("/api/auth", AuthRoute); 
+app.use("/api/student", StudentRoute); 
+app.use("/api/admin", AdminRoute); 
+app.use("/api/company", CompanyRoute); 
+app.use("/api/reports", verifyAdmin, ReportsRoute); 
 
 // Session check route (to check if a user is logged in)
 app.get("/get-session", (req, res) => {  
@@ -110,6 +112,7 @@ app.get("/get-session", (req, res) => {
   res.json(req.session?.isAuth); // Respond with session authentication status
 });
 
+/*
 if (process.env.NODE_ENV === "production") {
   // Serving admin frontend build 
   app.use(
@@ -132,6 +135,8 @@ if (process.env.NODE_ENV === "production") {
     );
   });
 }  
+*/
+
   // Registration route
   /*
   app.post("/api/Register", async (req, res) => {

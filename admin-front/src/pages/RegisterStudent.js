@@ -5,27 +5,46 @@ import Navbar from "../components/Navbar";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { BeatLoader } from "react-spinners";
+import { z } from "zod";
+
+const emailSchema = z.string().regex(
+  /^\d{2}(it|ec)(uos|uon|ubd|ubs|ues|utf|usf|uof|usd|ubd|uod|ued)\d{3}@ddu\.ac\.in$/,
+  { message: "Invalid email format. Must be like '19itous123@ddu.ac.in'."}
+)
 
 const RegisterStudent = () => {
+
   const [students, setStudents] = useState("");
   const [studentsArr, setStudentsArr] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const handleChange = (e) => {
+
+  const handleChange = (e) => { 
+
     const val = e.target.value;
     setStudents(val);
-    setStudentsArr(
-      val
-        .replace(/\n/g, " ")
-        .split(" ")
-        .filter((item) => item.length > 0)
-    );
+    
+    const emails = val
+      .replace(/\n/g, " ")
+      .split(" ")
+      .filter((item) => item.length > 0);
+
+    setStudentsArr(emails);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {    
     setIsLoading(true);
-    e.preventDefault();
+    e.preventDefault();    
     
-    console.log("email array ", studentsArr); // // log the college emails
+    console.log("email array ", studentsArr); 
+
+    // validate all emails in studentsArr
+    const invalidEmails = studentsArr.filter(email => !emailSchema.safeParse(email).success);
+
+    if(invalidEmails.length > 0) {
+      toast.error(`Invalid email: ${invalidEmails.join(",")}`);
+      setIsLoading(false);
+      return;
+    } 
 
     try {
       const { data } = await axios.post("/api/student/new", {
@@ -47,8 +66,10 @@ const RegisterStudent = () => {
 
   return (
     <div className="bg-backg min-h-screen text-white">
+      
       {/* Navbar */}
       <Navbar focusOn="students" />
+      
       {/* Wrapper div */}
       <div className="px-2 py-5 flex flex-col gap-8 md:px-8 lg:px-12">
         <div className="bg-section mx-auto px-4 py-4 lg:w-2/3">

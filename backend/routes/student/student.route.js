@@ -45,16 +45,16 @@ router.get("/", verifyLoggedIn, getStudent);
 router.delete("/:stuId", verifyAdmin,deleteStudentById);
 
 // register new student with email
-router.post("/new", verifyAdmin,registerNewStudentWithEmail);
+router.post("/new", verifyAdmin, registerNewStudentWithEmail);
 
 // update the existing user
-router.put("/update", verifyLoggedIn,updateStudentDetails);
+router.put("/update", verifyLoggedIn, updateStudentDetails);
 
 // update password
-router.put("/updatePassword", verifyLoggedIn,updatePassword);
+router.put("/updatePassword", verifyLoggedIn, updatePassword);
 
 // get student's applications with roles
-router.get("/:stuId/applications", verifyLoggedIn,getStudentApplications);
+router.get("/:stuId/applications", verifyLoggedIn, getStudentApplications);
 
 router.post("/forgot-password", forgetPassword);
 

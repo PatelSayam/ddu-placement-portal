@@ -9,9 +9,9 @@ const { setStudentsElligibility } = require("../../utils/company.utils");
 
 const registerNewCompany = async (req, res) => {
   const { name, website, email, forBatch, description, roles, address } =
-    req.body;
+    req.body;  
 
-  await setStudentsElligibility(roles, forBatch); 
+  //await setStudentsElligibility(roles, forBatch); 
 
   const tempCompany = new Company({
     name,
@@ -22,10 +22,14 @@ const registerNewCompany = async (req, res) => {
     address,
     roles,
   });
+  console.log(`name is ${name} website is ${website} email is ${email} forBatch is ${forBatch} description is ${description} address is ${address} roles is ${roles}`);
+
+  console.log("tempcompany is", tempCompany)
 
   tempCompany
     .save()
     .then((savedCompany) => {
+      console.log("savedCompany is", savedCompany)
       res.json({ success: true, data: savedCompany });
     })
     .catch((err) => {

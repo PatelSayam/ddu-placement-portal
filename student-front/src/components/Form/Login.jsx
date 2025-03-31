@@ -33,6 +33,8 @@ export const Login = () => {
         withCredentials: true,
       });
 
+      console.log(data);
+
       if (data.success === true) {        
         localStorage.setItem("stuId", data.data.studentId);
         if (data.data.isVerified) {          
@@ -108,7 +110,7 @@ export const Login = () => {
               onClick={postEntry}
               disabled={isLoading}
             >
-              {isLoading ? <BeatLoader color="white" /> : "Sign In"}
+              {isLoading ? <BeatLoader color="white" /> : "Log In"}
             </button>
 
             {/* </Link> */}

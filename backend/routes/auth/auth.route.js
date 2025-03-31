@@ -57,6 +57,7 @@ router.post("/admin/login", async (req, res) => {
 });
 
 // Student Login Route
+// Login Route
 router.post("/student/login", async (req, res) => {
   const { email, password } = req.body; 
   
