@@ -12,26 +12,27 @@ const Companies = () => {
   const [filter, setFilter] = useState({
     forBatch: localStorage.getItem("year"),
   });
+  // console.log("filter is ", filter);
   const [showFilter, setShowFilter] = useState(false);
 
-  const fetchCompanies = async () => {
+  const fetchCompanies = async (req, res) => {
     let filterURL = "";
-
-    for (const query in filter) {
+    
+    for (const query in filter) {      
       filterURL += `${query}=${filter[query]}&`;
     }
 
-    return axios
-      .get(`/api/company?${filterURL}`, {
+    try {
+      const response = await axios.get(`/api/company?${filterURL}`, {
         withCredentials: true,
-      })
-      .then((response) => response.data)
-      .then((data) => data)
-      .catch((err) => {
-        console.log(err);
-      });
+      });      
+      return response.data;
+    } catch (error) {      
+      return res.json({ success: false, error: error.message });
+    }
   };
 
+  // handleFilterChange function
   const handleFilterChange = (e) => {
     if (e.target.value) {
       e.target.style.border = "2px dotted green";
@@ -45,10 +46,12 @@ const Companies = () => {
     }
   };
 
+  // handleFilterReset function
   const handleFilterReset = () => {
-    setFilter("");
-    const allInputs = document.body.getElementsByTagName("input");
+    // setFilter("");
+    const allInputs = document.body.getElementsByTagName("input");    
     const allSelects = document.body.getElementsByTagName("select");
+    
     for (let i = 0; i < allInputs.length; ++i) {
       allInputs.item(i).style.border = "";
     }
@@ -60,21 +63,27 @@ const Companies = () => {
     document.getElementById("filter-form").reset();
   };
 
+  // useQuery hook to fetch companies
   const { data, isLoading, isError } = useQuery(
     ["companies", filter],
     fetchCompanies,
     {
       keepPreviousData: true,
-      staleTime : Infinity
-    }
+      staleTime: Infinity,
+    }    
   );
+  
+  if (isLoading) return <p>Loading...</p>
+  if (isError) return <p>Error: {isError.message}</p>
 
   return (
     <div className="bg-backg min-h-screen text-white">
       {/* Navbar */}
       <Navbar focusOn="companies" />
+
       {/* Wrapper */}
       <div className="px-2 py-5 flex flex-col gap-8 md:px-8 lg:px-12">
+
         {/* Create Post */}
         <div className="flex justify-between  items-center bg-tableHead p-3 rounded-md">
           <h1 className="text-2xl">New Company Announcement</h1>
@@ -84,13 +93,12 @@ const Companies = () => {
             </button>
           </Link>
         </div>
-
+    
         {/* Companies */}
-
         <h1 className="text-2xl">Companies</h1>
-        {/*  Filters*/}
 
-        <div className="bg-subSection px-2 py-3 rounded-lg">
+        {/*  Filters*/}
+        <div className="bg-subSection px-2 py-3 rounded-lg">  
           <div className="flex flex-row justify-between items-center  ">
             <h2 className="text-xl">Filters</h2>
             <div className="flex flex-row gap-4 items-center">
@@ -153,7 +161,6 @@ const Companies = () => {
             />
 
             {/* Types */}
-
             <div className="flex  flex-col gap-1 w-full md:w-1/6">
               <span className="text-placeholder">Type</span>
               <select
@@ -165,9 +172,10 @@ const Companies = () => {
               >
                 <option value=""> </option>
                 <option value="full-time"> Full Time</option>
-                <option value="internship"> Internship</option>
+                <option value="internship"> Internship</option> 
               </select>
             </div>
+
             {/* Mode */}
             <div className="flex  flex-col gap-1 w-full md:w-1/6">
               <span className="text-placeholder">Mode</span>
@@ -175,14 +183,14 @@ const Companies = () => {
                 name="mode"
                 className="outline-none px-4 py-1 rounded-md bg-alternate"
                 onChange={(e) => {
-                  handleFilterChange(e);
+                  handleFilterChange(e);  
                 }}
               >
                 <option value=""> </option>
                 <option value="remote"> Remote</option>
                 <option value="on-site"> On Site</option>
                 <option value="hybrid"> Hybrid </option>
-              </select>
+              </select> 
             </div>
 
             {/* Bonds */}
@@ -207,6 +215,7 @@ const Companies = () => {
                 <option value="offline">Offline</option>
               </select>
             </div>
+            
             {/* Min CPI */}
             <FilterInput
               name="cpi"
@@ -250,6 +259,7 @@ const Companies = () => {
             />
           </form>
         </div>
+
         {/* For Batch */}
         <FilterInputWithValue
           name="forBatch"
@@ -315,7 +325,7 @@ const Companies = () => {
                 </table>
                 <Link
                   to={`/admin/companies/company-view/${item._id}`}
-                  state={{ comany: item }}
+                  state={{ company: item }}
                 >
                   <button className="text-section bg-white rounded-sm  px-4 my-3">
                     View More

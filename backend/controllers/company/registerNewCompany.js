@@ -11,7 +11,7 @@ const registerNewCompany = async (req, res) => {
   const { name, website, email, forBatch, description, roles, address } =
     req.body;
 
-  await setStudentsElligibility(roles, forBatch);
+  await setStudentsElligibility(roles, forBatch); 
 
   const tempCompany = new Company({
     name,

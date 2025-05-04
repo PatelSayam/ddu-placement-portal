@@ -4,10 +4,10 @@ const AdminSchema = mongoose.Schema({
   firstName: { type: String, required: true },
   middleName: { type: String, required: true },
   lastName: { type: String, required: true },
-  gender: { type: String, enum: ["male", "female"] },
+  gender: { type: String, enum: ["male", "female"] }, // enum ensures for data integrity
   password: { type: String, required: true },
   department: { type: String, required: true },
-  designation: { type: String, default: "professor" },
+  designation: { type: String, default: "professor" },  
   dateOfBirth: { type: Date, default: new Date() },
   email: { type: String, unique: true, required: true },
   phoneNumber: { type: Number, required: true },

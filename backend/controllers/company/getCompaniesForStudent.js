@@ -9,7 +9,7 @@ const { default: mongoose } = require("mongoose");
 
 const getCompaniesForStudent = async (req, res) => {
   const { studentId } = req.params;
-  if (!isValidObjectId(studentId)) {
+  if (!mongoose.isValidObjectId(studentId)) {
     return res
       .status(INVALID_REQUEST_DATA_CODE)
       .json({ success: false, msg: INVALID_REQUEST_DATA });

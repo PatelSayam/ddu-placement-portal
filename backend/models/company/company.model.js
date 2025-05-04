@@ -7,15 +7,7 @@ const CompanySchema = mongoose.Schema({
   email: { type: String, required: true },
   forBatch: { type: Number, required: true },
   description: { type: String },
-  isActive: { type: Boolean, required: true },
-  rounds: [
-    {
-      roundName: { type: String, required: true }, // Round name like "Technical Interview", "HR Interview"
-      roundDescription: { type: String }, // Optional: Add more details about the round
-      roundOrder: { type: Number, required: true }, // Optional: The order of the round
-      // You can add more fields like round duration, type of interview, etc.
-    },
-  ],
+  isActive: { type: Boolean, default: true, required: true },
   roles: {
     type: [
       mongoose.Schema({
@@ -28,12 +20,12 @@ const CompanySchema = mongoose.Schema({
         bonds: { type: Number, required: true, default: 0 },
         deadline: { type: String, required: true },
         interviewDate: { type: String, required: true },
-        interviewMode: { type: String, enum: ["online", "offline"] },
+        interviewMode: { type: String, enum: ["online", "offline"]},
 
         requirements: {
           type: mongoose.Schema({
             cpi: { type: Number, defualt: 0 },
-            twelfthPerc: { type: Number, default: 0 },
+            twelthPerc: { type: Number, default: 0 },
             tenthPerc: { type: Number, default: 0 },
             diplomaPerc: { type: Number, default: 0 },
             competitiveCoding: {

@@ -20,21 +20,22 @@ const Students = () => {
   const [showFilter, setShowFilter] = useState(false);
   const navigate = useNavigate();
 
-  const fetchStudents = async () => {
+  const fetchStudents = async (req, res) => {
     let filterURL = "";
+
     for (const query in filter) {
       filterURL += `${query}=${filter[query]}&`;
     }
 
-    return axios
-      .get(`/api/student?${filterURL}`, {
+    try {
+      const response = await axios.get(`/api/student?${filterURL}`, {
         withCredentials: true,
-      })
-      .then((response) => response.data)
-      .then((data) => data)
-      .catch((err) => {
-        console.log(err);
       });
+            
+      return response?.data;
+    } catch (error) {
+      return res.json({ success: false, error: error.message});
+    }
   };
 
   const handleFilterChange = (e) => {
@@ -74,9 +75,10 @@ const Students = () => {
   );
 
   return (
-    <div className="bg-backg min-h-screen text-white">
+    <div className="bg-backg min-h-screen text-white">      
       {/* Navbar */}
       <Navbar focusOn="students" />
+
       {/* Wrapper */}
       <div className="px-2 py-5 flex flex-col gap-8 md:px-8 lg:px-12">
         {/* Add students */}
@@ -264,11 +266,11 @@ const Students = () => {
           </form>
         </div>
 
-        {/* For Batch */}
+        {/* For showing student batchwise */}
         <FilterInputWithValue
           name="passingYear"
           title="Passing Year"
-          value={filter.passingYear}
+          value={filter.passingYear}  
           onChangeFun={handleFilterChange}
           type="number"
         />

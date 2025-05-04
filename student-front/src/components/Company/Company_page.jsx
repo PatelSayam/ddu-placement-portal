@@ -26,13 +26,16 @@ export const Company_page = ({ fetched_url }) => {
   };
 
   const id = fetched_url.id1;
+  // console.log("id of url is", id);
+  // console.log("stuId is ", getStuId())
   const getValues = async () => {
-    return axios
-      .get(`/api/company/?id=${id}&stuId=${getStuId()}`)
-      .then(({ data }) => {
-        return data.data;
-      });
-  };
+    try {
+      const { data } = await axios.get(`/api/company/?id=${id}&stuId=${getStuId()}`);
+      return data?.data;
+    } catch (err) {
+      return err.message;
+    }
+  }  
 
   const {
     data: _data,

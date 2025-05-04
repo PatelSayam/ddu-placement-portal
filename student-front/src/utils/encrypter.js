@@ -7,5 +7,6 @@ export default function encrypter(data) {
     .replace(/\+/g, "p23S")
     .replace(/\//g, "sL3S4")
     .replace(/=/g, "e2uAl");
+  console.log("encoded data is", encoded)
   return encoded;
 }

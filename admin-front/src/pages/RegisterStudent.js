@@ -24,10 +24,14 @@ const RegisterStudent = () => {
   const handleSubmit = async (e) => {
     setIsLoading(true);
     e.preventDefault();
+    
+    console.log("email array ", studentsArr); // // log the college emails
+
     try {
       const { data } = await axios.post("/api/student/new", {
         collegeEmails: studentsArr,
       });
+      
       if (data?.success === true) {
         toast.success("Students Registered ✅");
       } else if (data?.success === false) {

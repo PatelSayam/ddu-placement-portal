@@ -12,14 +12,17 @@ import convertToDate from "../../utils/convertToDate";
 import { toast } from "react-toastify";
 
 export const Homepage1 = () => {
-
   const getValues = async () => {
+    console.log(getStuId());
     return axios
       .get(`/api/company/of/${getStuId()}`, {
         withCredentials: true,
       })
       .then(({ data }) => {
         return data.data;
+      })
+      .catch((err) => {
+        return err;
       });
   };
 
@@ -36,6 +39,7 @@ export const Homepage1 = () => {
   }
 
   const renderItem1 = (item) => {
+    console.log(item);
     return (
       <div className=" p-4 mx-10 my-8 text-black bg-[#d8ecff] rounded-md  border-blue-500 ">
         <div>

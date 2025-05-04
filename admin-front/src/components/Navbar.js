@@ -25,7 +25,7 @@ const Navbar = ({ focusOn }) => {
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-row gap-8 items-center">
           {/* <img
-            src="https://wilcity.com/wp-content/uploads/2018/12/sample-logo-design-png-3-2.png"
+            src="https://wilcity.com/wp-content/uploads/2018/12/sample-logo-design-png-3-2.png" alt="ddu-logo"
             className="rounded-full w-10 h-10 bg-cover"
           /> */}
 
@@ -58,7 +58,6 @@ const Navbar = ({ focusOn }) => {
           </div>
         </Link>
 
-        {/* icon box - students */}
         <Link to="/admin/students">
           <div
             className={`flex gap-8 items-center  ${
@@ -70,19 +69,6 @@ const Navbar = ({ focusOn }) => {
           </div>
         </Link>
 
-        {/* New link for managing student status */}
-        {/* <Link to="/admin/manage-student-status">
-          <div
-            className={`flex gap-8 items-center  ${
-              focusOn === "manage-student-status" ? "bg-hover" : ""
-            }  rounded-md px-2 py-1 hover:bg-hover`}
-          >
-            <AiOutlineUserSwitch className="text-2xl" /> 
-            <span className="font-light text-xl">Manage Student Status</span>
-          </div>
-        </Link> */}
-
-        {/* icon box - reports */}
         <Link to="/admin/reports">
           <div
             className={`flex gap-8 items-center  ${
@@ -94,7 +80,6 @@ const Navbar = ({ focusOn }) => {
           </div>
         </Link>
 
-        {/* Logout */}
         <Link to="/admin/login">
           <div
             className={`flex gap-8 items-center  rounded-md px-2 py-1 hover:bg-hover`}

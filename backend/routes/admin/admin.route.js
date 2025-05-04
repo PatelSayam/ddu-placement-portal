@@ -1,4 +1,5 @@
 const router = require("express").Router();
+// router can be used to define routes and middlewares
 const Admin = require("../../models/admin/admin.model");
 const generator = require("generate-password");
 
@@ -22,7 +23,7 @@ router.get("/:id", (req, res) => {
     .catch((error) => {
       return res.json({ success: false, error });
     });
-});
+}); 
 
 // register admin
 router.post("/", async (req, res) => {
@@ -51,6 +52,7 @@ router.post("/", async (req, res) => {
     return res.json({ success: false, msg: DUPLICATE_STUDENT });
   }
 
+  // generate a random password
   const password = generator.generate({
     length: 10,
     lowercase: true,
@@ -78,14 +80,16 @@ router.post("/", async (req, res) => {
     pincode,
   });
 
-  tempAdmin
-    .save()
-    .then((savedAdmin) => res.json({ success: true, data: savedAdmin }))
-    .catch((error) => res.json({ success: false, error: error }));
+  try {
+    const savedAdmin = await tempAdmin.save();
+    res.json({ success: true, data: savedAdmin});
+  } catch (error) {
+    res.json({ success: false, error});
+  }  
 });
 
 // update the existing admin
-router.put("/", (req, res) => {
+router.put("/", async (req, res) => {
   const {
     firstName,
     middleName,
@@ -106,7 +110,7 @@ router.put("/", (req, res) => {
 
   if (!email) return res.json({ success: false, msg: NO_EMAIL });
 
-  Admin.findOneAndUpdate(
+  await Admin.findOneAndUpdate(
     { email },
     {
       firstName,
@@ -124,7 +128,7 @@ router.put("/", (req, res) => {
       city,
       pincode,
     },
-    { new: true }
+    { new: true } // means updated document is returned not the original one
   )
     .then((updatedAdmin) => res.json({ success: true, data: updatedAdmin }))
     .catch((error) => res.json({ success: false, error }));

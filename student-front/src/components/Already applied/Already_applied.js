@@ -13,14 +13,18 @@ import { toast } from "react-toastify";
 export const Already_applied = () => {
   const studId = getStuId();
 
-  const getValues = async () => {
-    return axios.get(`/api/student/${studId}/applications`).then(({ data }) => {
+  const getValues = async () => {    
+    try {
+      const {data} = await axios.get(`/api/student/${studId}/applications`);
+      // console.log("data is", data);
       return data.data;
-    });
-  };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }    
+  }  
 
   const {
-    data: _data,
+    data: companiesData,
     isLoading,
     isError,
   } = useQuery(["applied-companies", "filter"], getValues, {
@@ -33,7 +37,7 @@ export const Already_applied = () => {
 
   const renderItem1 = (item) => {
     return (
-      <div className=" p-4 mx-10 my-8 text-black bg-[#d8ecff] rounded-md  border-blue-500 ">
+      <div className=" p-4 mx-10 my-8 text-black bg-blue-200 rounded-md  border-blue-500 ">
         <div>
           <h3 className="text-blue-600 text-xl">
             <b>{item.name}</b>
@@ -140,7 +144,8 @@ export const Already_applied = () => {
         </div>
 
         <br />
-        <div className=" grid justify-items-center">
+
+        <div className="grid justify-items-center">
           <Link to={"/Company/" + encrypter(item._id)}>
             <div className="bg-blue-500 text-white  rounded-lg grid justify-items-center">
               <button className="px-4 py-2">View More</button>
@@ -153,13 +158,13 @@ export const Already_applied = () => {
 
   return (
     <div className="min-h-screen">
-      <Navbar />
+      <Navbar />      
       {isLoading || isError ? (
         <div className="mt-5 text-center">
           <ClipLoader color="blue" size={45} />
         </div>
       ) : (
-        _data.map(renderItem1)
+        companiesData.map(renderItem1)
       )}
     </div>
   );

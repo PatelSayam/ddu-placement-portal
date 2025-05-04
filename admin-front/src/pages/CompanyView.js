@@ -19,12 +19,14 @@ import download from "downloadjs";
 
 const CompanyView = () => {
   const { id } = useParams();
+  
   const [company, setCompany] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
   const [refetchFlag, setRefetchFlag] = useState(false);
   const [showDeleteModel, setShowDeleteModel] = useState(false);
   const navigate = useNavigate();
+  
   const {
     register,
     handleSubmit,

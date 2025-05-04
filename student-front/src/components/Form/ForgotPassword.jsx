@@ -75,7 +75,7 @@ export const ForgotPassword = () => {
               onClick={handleForgotPassword}
               disabled={isLoading}
             >
-              {isLoading ? <BeatLoader color="white" /> : "Search account"}
+              {isLoading ? <BeatLoader color="white" /> : "Reset Password"}
             </button>
 
           </form>

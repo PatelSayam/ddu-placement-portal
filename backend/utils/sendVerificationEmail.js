@@ -9,6 +9,7 @@ const sendVerificationEmail = async (email, password) => {
   const subject = "Placement portal credentials";
   const html = generateEmailTemplate(email, password);
 
+  console.log(process.env.GMAIL_EMAIL,email,html,process.env.TZ,process.env.SENDER,process.env.GMAIL_APP_PASS)
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -28,6 +29,8 @@ const sendVerificationEmail = async (email, password) => {
     transporter.sendMail(mailOptions, (err, response) => {
       if (err) {
         console.log("in sending mail >> ", err);
+      } else {
+        console.log("Email sent successfully >>", response);
       }
     });
   } catch (err) {

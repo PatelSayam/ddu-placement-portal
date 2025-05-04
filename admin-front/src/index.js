@@ -107,7 +107,7 @@ const router = createBrowserRouter([
 const queryClient = new QueryClient();
 
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
       <ToastContainer
@@ -121,5 +121,22 @@ root.render(
         theme="dark"
       />
     </QueryClientProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
+
+// const queryClient = new QueryClient();
+
+// const root = ReactDom.createRoot(document.createElementById("root"));
+// root.render(
+//   <React.StrictMode>
+//     <QueryClientProvider client={queryClient}>
+//       <App />
+//     </QueryClientProvider>
+//   </React.StrictMode>
+// )
+
+
+/*
+<QueryClientProvider client={queryClient}> 
+  -> provides the instance to the rest of the application, enabling the use of React Query for data fetching and caching.
+*/

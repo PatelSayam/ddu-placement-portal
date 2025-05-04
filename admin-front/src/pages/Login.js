@@ -1,16 +1,16 @@
-// Importing necessary dependencies and components
-import React, { useState } from "react"; // React and useState hook for managing state
+import React, { useState } from "react"; 
 import { useForm } from "react-hook-form"; // React Hook Form for form handling and validation
 import { yupResolver } from "@hookform/resolvers/yup"; // To integrate Yup validation with React Hook Form
-import axios from "axios"; // Axios for making HTTP requests to the backend
-import loginImage from "../assets/register4.jpg"; // Background image for the login page
-import { AiOutlineMail, AiOutlineLock } from "react-icons/ai"; // Icons for email and password fields
-import { useCookies } from "react-cookie"; // React hook to manage cookies
-import { useNavigate } from "react-router-dom"; // Hook to navigate programmatically
+import axios from "axios"; 
+import loginImage from "../assets/register4.jpg"; 
+import { AiOutlineMail, AiOutlineLock } from "react-icons/ai"; 
+import { useCookies } from "react-cookie"; 
+import { useNavigate } from "react-router-dom"; 
 import loginValidator from "../form-validators/login.validator"; // Custom validation schema using Yup for login
-import Error from "../components/Error"; // Custom error component to display error messages
-import { ToastContainer, toast } from "react-toastify"; // Toast notifications for user feedback
+import Error from "../components/Error"; 
+import { ToastContainer, toast } from "react-toastify"; 
 import { BeatLoader } from "react-spinners"; // A loading spinner for asynchronous actions
+
 
 const Login = () => {
   // Setting up form handling with react-hook-form and yup validation
@@ -21,48 +21,43 @@ const Login = () => {
     getValues, // To get the form values
   } = useForm({ resolver: yupResolver(loginValidator) }); // Use the Yup validator for login form validation
 
-  // State management
-  const [cookies, setCookie, removeCookie] = useCookies(); // Cookie hooks to manage cookies in the application
-  const navigate = useNavigate(); // React Router hook for programmatic navigation
+  const [cookies, setCookie, removeCookie] = useCookies(); 
+  const navigate = useNavigate(); 
   const [isLoading, setIsLoading] = useState(false); // Loading state to show a spinner when login is in progress
 
   // Handle login submission
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setIsLoading(true); // Set loading state to true when the login process starts
     const email = getValues("email"); // Get email value from the form
     const password = getValues("password"); // Get password value from the form
 
-    // Making the API call to login the user
-    axios
-      .post(
-        "/api/auth/admin/login", // API endpoint for logging in as admin
-        { email, password }, // Send email and password as the payload
-        { withCredentials: true } // Ensure cookies are sent with the request
-      )
-      .then((response) => {
-        console.log(response.data); // Log the response from the server
-        return response.data; // Return the response data to the next promise chain
-      })
-      .then((data) => {
-        // If the login fails (success is false), show an error toast message
-        if (data.success === false) {
-          toast.error(data.msg); // Display error message
-          return; // Exit early if login fails
-        }
-        
-        // If login is successful, store values in localStorage for future use
-        localStorage.setItem("year", new Date().getFullYear()); // Store current year
-        localStorage.setItem("minYear", new Date().getFullYear() - 1); // Store previous year
-        localStorage.setItem("maxYear", new Date().getFullYear() + 1); // Store next year
+    // Make a POST request to the backend API to log in the user
+    try {
+      const response = await axios.post(
+        'api/auth/admin/login',
+        { email, password }, { withCredentials: true }
+      );
 
-        // Navigate to the admin dashboard page upon successful login
-        navigate("/admin/");
-      })
-      .then(() => setIsLoading(false)) // Stop loading spinner after API response
-      .catch((error) => {
-        console.log(error); // Log any error that occurred during the API request
-        setIsLoading(false); // Stop loading spinner if an error occurs
-      });
+      console.log(response.data); 
+      const data = response.data;
+
+      if(data.success === false) {
+        toast.error(data.msg);
+        return;
+      }
+
+      // If login is successful, store values in localStorage for future use
+      localStorage.setItem("year", new Date().getFullYear()); // Store current year
+      localStorage.setItem("minYear", new Date().getFullYear() - 1); // Store previous year
+      localStorage.setItem("maxYear", new Date().getFullYear() + 1); // Store next year
+
+      navigate('/admin');
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }   
   };
 
   return (
@@ -157,6 +152,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+      
     </>
   );
 };

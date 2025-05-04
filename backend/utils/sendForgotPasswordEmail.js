@@ -17,8 +17,7 @@ const sendForgotPasswordEmail = async (email, password) => {
 	<p> Password : ${password} </p>
 	<a href="https://ddu-placements.onrender.com/login" target="_blank">Login here </a>
 	<p> Please do not share this credentials with anyone. </p>
-	<br>
-	
+	<br>	
 	</body>
 	`;
 
@@ -40,11 +39,13 @@ const sendForgotPasswordEmail = async (email, password) => {
   try {
     transporter.sendMail(mailOptions, (err, response) => {
       if (err) {
-        console.log("in sending mail >> ", err);
+        console.log("Error in sending mail >> ", err);
+      } else {
+        console.log("Email sent successfully >>", response);
       }
     });
   } catch (err) {
-    console.log("in sending mail >> ", err);
+    console.log("Error in sending mail >> ", err);
   }
 };
 

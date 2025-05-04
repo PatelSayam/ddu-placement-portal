@@ -412,7 +412,7 @@ const CreateCompany1 = () => {
               <button
                 className="text-section  bg-white rounded-md px-4 py-2 disabled:bg-section"
                 type="submit"
-                // onClick={() => createCompany()}
+                onClick={() => createCompany()}
                 disabled={isCreating}
               >
                 {!isCreating ? (

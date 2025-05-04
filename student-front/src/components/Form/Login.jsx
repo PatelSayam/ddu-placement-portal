@@ -33,12 +33,10 @@ export const Login = () => {
         withCredentials: true,
       });
 
-      console.log(data);
-
-      if (data.success === true) {
+      if (data.success === true) {        
         localStorage.setItem("stuId", data.data.studentId);
-        if (data.data.isVerified) {
-          navigate("/");
+        if (data.data.isVerified) {          
+          navigate("/Profile");
         } else {
           navigate("/changepassword");
         }
@@ -61,7 +59,7 @@ export const Login = () => {
 
           <form
             className="max-w-[400px] w-full mx-auto bg-gray-900 p-8 px-8 rounded-lg"
-            action={addEntry}
+            onSubmit={addEntry}
             method="post"
           >
             <h2 className="text-4xl dark:text-white font-bold text-center">
@@ -99,7 +97,7 @@ export const Login = () => {
               <input className="mr-2" type="checkbox"></input>Remember me
             </p> */}
               <Link to={"/forgot-password"}>
-                <p className="underline">Forget password?</p>
+                <p className="underline">Forgot password?</p>
               </Link>
             </div>
 
